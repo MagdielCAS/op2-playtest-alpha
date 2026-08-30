@@ -1,51 +1,52 @@
 {
-  "id": "module",
-  "title": "New Module",
-  "description": "",
-  "version": "#{VERSION}#",
-  "library": "false",
-  "manifestPlusVersion": "1.2.0",
-  "compatibility": {
-    "minimum": 10,
-    "verified": 10,
-    "maximum": 11
-  },
-  "authors": [
-    {
-      "name": "The League of Extraordinary FVTT Developers",
-      "url": "https://github.com/League-of-Foundry-Developers",
-      "discord": "discordID#0001"
-    }
-  ],
-  "relationships": {
-    "systems": [],
-    "requires": []
-  },
-  "esmodules": [
-    "scripts/module.js"
-  ],
-  "scripts": [
-    "scripts/lib/lib.js"
-  ],
-  "styles": [
-    "styles/module.css"
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "languages/en.json"
-    }
-  ],
-  "url": "#{URL}#",
-  "manifest": "#{MANIFEST}#",
-  "download": "#{DOWNLOAD}#",
-  "license": "LICENSE",
-  "readme": "README.md",
-  "media": [
-    {
-      "type": "icon",
-      "url": "https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4"
-    }
-  ]
+	"id": "op2-playtest-alpha",
+	"title": "Ordem Paranormal 2 — Playtest Alpha",
+	"description": "Camada de regras do playtest alpha de Ordem Paranormal RPG 2 sobre o sistema Ordem Paranormal. Atributos e perícias em escala de dados (d4–d12), testes de dois dados, rolagem alta/baixa e críticos.",
+	"version": "0.1.0",
+	"compatibility": {
+		"minimum": "14",
+		"verified": "14"
+	},
+	"authors": [
+		{
+			"name": "Magdiel Campelo"
+		}
+	],
+	"relationships": {
+		"systems": [
+			{
+				"id": "ordemparanormal",
+				"type": "system",
+				"compatibility": {
+					"minimum": "8.0.0"
+				}
+			}
+		]
+	},
+	"documentTypes": {
+		"Actor": {
+			"agent": {
+				"htmlFields": ["biography", "notes"]
+			}
+		}
+	},
+	"esmodules": ["scripts/op2.mjs"],
+	"styles": ["styles/op2.css"],
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "languages/en.json"
+		},
+		{
+			"lang": "pt-BR",
+			"name": "Português (Brasil)",
+			"path": "languages/pt-BR.json"
+		}
+	],
+	"url": "#{URL}#",
+	"manifest": "#{MANIFEST}#",
+	"download": "#{DOWNLOAD}#",
+	"license": "LICENSE",
+	"readme": "README.md"
 }

@@ -1,0 +1,48 @@
+<section class="tab op2-main {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+	<div class="op2-attributes">
+		{{#each attributes as |attribute|}}
+		<div class="op2-attribute">
+			<span class="op2-attribute__label">{{attribute.label}}</span>
+			<select class="op2-attribute__die" name="{{attribute.path}}.value" {{#unless ../isEditable}}disabled{{/unless}}>
+				{{selectOptions ../dieChoices selected=attribute.value localize=true}}
+			</select>
+			{{#if attribute.step}}
+			<span class="op2-attribute__step" data-tooltip="{{localize 'OP2.Field.stepHint'}}">
+				{{attribute.dieLabel}}
+			</span>
+			{{/if}}
+		</div>
+		{{/each}}
+	</div>
+
+	<div class="op2-skills">
+		<div class="op2-skills__head">
+			<span>{{localize "OP2.Field.skill"}}</span>
+			<span>{{localize "OP2.Field.attribute"}}</span>
+			<span>{{localize "OP2.Field.die"}}</span>
+		</div>
+
+		{{#each skills as |skill|}}
+		<div class="op2-skill">
+			<button type="button" class="op2-skill__name" data-action="rollSkill" data-skill="{{skill.key}}"
+				data-tooltip="{{localize 'OP2.Tooltip.roll'}}">{{skill.label}}</button>
+			<span class="op2-skill__attribute">{{skill.attributeLabel}}</span>
+			<select class="op2-skill__die" name="{{skill.path}}.value" {{#unless ../isEditable}}disabled{{/unless}}>
+				{{selectOptions ../dieChoices selected=skill.value localize=true}}
+			</select>
+		</div>
+		{{/each}}
+
+		<div class="op2-skills__group">{{aptitudeLabel}}</div>
+		{{#each aptitudes as |skill|}}
+		<div class="op2-skill op2-skill--nested">
+			<button type="button" class="op2-skill__name" data-action="rollSkill" data-skill="{{skill.key}}"
+				data-tooltip="{{localize 'OP2.Tooltip.roll'}}">{{skill.label}}</button>
+			<span class="op2-skill__attribute">{{skill.attributeLabel}}</span>
+			<select class="op2-skill__die" name="{{skill.path}}.value" {{#unless ../isEditable}}disabled{{/unless}}>
+				{{selectOptions ../dieChoices selected=skill.value localize=true}}
+			</select>
+		</div>
+		{{/each}}
+	</div>
+</section>

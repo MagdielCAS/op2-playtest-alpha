@@ -1,0 +1,27 @@
+<section class="tab op2-abilities {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+	<div class="op2-abilities__toolbar">
+		<button type="button" data-action="addAbility" {{#unless isEditable}}disabled{{/unless}}>
+			<i class="fa-solid fa-plus"></i> {{localize "OP2.Ability.add"}}
+		</button>
+	</div>
+
+	{{#each system.abilities as |ability index|}}
+	<div class="op2-ability">
+		<div class="op2-ability__head">
+			<input type="text" name="system.abilities.{{index}}.name" value="{{ability.name}}"
+				placeholder="{{localize 'OP2.Ability.name'}}" {{#unless ../isEditable}}disabled{{/unless}} />
+			<input type="text" name="system.abilities.{{index}}.source" value="{{ability.source}}"
+				placeholder="{{localize 'OP2.Ability.source'}}" {{#unless ../isEditable}}disabled{{/unless}} />
+			<button type="button" class="op2-ability__delete" data-action="deleteAbility" data-index="{{index}}"
+				{{#unless ../isEditable}}disabled{{/unless}}>
+				<i class="fa-solid fa-trash"></i>
+			</button>
+		</div>
+		<textarea name="system.abilities.{{index}}.description" rows="3"
+			placeholder="{{localize 'OP2.Ability.description'}}"
+			{{#unless ../isEditable}}disabled{{/unless}}>{{ability.description}}</textarea>
+	</div>
+	{{else}}
+	<p class="op2-empty">{{localize "OP2.Ability.empty"}}</p>
+	{{/each}}
+</section>

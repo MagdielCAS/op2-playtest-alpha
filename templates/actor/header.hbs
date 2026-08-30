@@ -1,0 +1,52 @@
+<header class="op2-header">
+	<img class="op2-header__portrait" src="{{document.img}}" data-edit="img" data-action="editImage"
+		alt="{{document.name}}" />
+
+	<div class="op2-header__fields">
+		<input class="op2-header__name" type="text" name="name" value="{{document.name}}"
+			placeholder="{{localize 'OP2.Field.name'}}" {{#unless isEditable}}disabled{{/unless}} />
+
+		<div class="op2-header__row">
+			<label>{{localize "OP2.Field.profile"}}
+				<select name="system.profile" {{#unless isEditable}}disabled{{/unless}}>
+					{{selectOptions profileChoices selected=system.profile localize=true}}
+				</select>
+			</label>
+			<label>{{localize "OP2.Field.occupation"}}
+				<input type="text" name="system.occupation" value="{{system.occupation}}"
+					{{#unless isEditable}}disabled{{/unless}} />
+			</label>
+			<label class="op2-header__level">{{localize "OP2.Field.level"}}
+				<input type="number" name="system.level" value="{{system.level}}" min="1" max="10" step="1"
+					{{#unless isEditable}}disabled{{/unless}} />
+			</label>
+		</div>
+
+		<div class="op2-header__row op2-resources">
+			<label class="op2-resource">{{localize "OP2.Field.pv"}}
+				<span class="op2-resource__pair">
+					<input type="number" name="system.pv.value" value="{{system.pv.value}}" step="1" />
+					<span class="op2-resource__sep">/</span>
+					<input type="number" name="system.pv.max" value="{{system.pv.max}}" step="1" />
+				</span>
+			</label>
+			<label class="op2-resource">{{localize "OP2.Field.pd"}}
+				<span class="op2-resource__pair">
+					<input type="number" name="system.pd.value" value="{{system.pd.value}}" step="1" />
+					<span class="op2-resource__sep">/</span>
+					<input type="number" name="system.pd.max" value="{{system.pd.max}}" step="1" />
+				</span>
+			</label>
+			<div class="op2-resource op2-impeto" data-tooltip="{{localize 'OP2.Field.impetoHint'}}">
+				<span class="op2-impeto__label">{{localize "OP2.Field.impeto"}}</span>
+				<span class="op2-impeto__track">
+					{{#each impetoBoxes as |box|}}
+					<button type="button" class="op2-impeto__box{{#if box.filled}} is-filled{{/if}}"
+						data-action="setImpeto" data-index="{{box.index}}"
+						aria-label="{{box.label}}"></button>
+					{{/each}}
+				</span>
+			</div>
+		</div>
+	</div>
+</header>

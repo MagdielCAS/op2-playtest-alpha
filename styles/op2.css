@@ -1,0 +1,293 @@
+/* Ordem Paranormal 2 — Playtest Alpha */
+
+.op2.sheet .window-content {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	font-family: var(--font-primary, sans-serif);
+}
+
+/* ---------- Header ---------- */
+
+.op2-header {
+	display: flex;
+	gap: 0.75rem;
+	align-items: flex-start;
+}
+
+.op2-header__portrait {
+	width: 92px;
+	height: 92px;
+	object-fit: cover;
+	border: 1px solid var(--color-border-dark, #444);
+	border-radius: 4px;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.op2-header__fields {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.op2-header__name {
+	font-size: 1.25rem;
+	font-weight: 700;
+}
+
+.op2-header__row {
+	display: flex;
+	gap: 0.5rem;
+	align-items: flex-end;
+	flex-wrap: wrap;
+}
+
+.op2-header__row label {
+	display: flex;
+	flex-direction: column;
+	font-size: 0.7rem;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	gap: 0.15rem;
+	flex: 1 1 6rem;
+	min-width: 0;
+}
+
+.op2-header__level {
+	flex: 0 0 4.5rem;
+}
+
+/* ---------- Resources ---------- */
+
+.op2-resource__pair {
+	display: flex;
+	align-items: center;
+	gap: 0.2rem;
+}
+
+.op2-resource__pair input {
+	text-align: center;
+}
+
+.op2-resource__sep {
+	opacity: 0.6;
+}
+
+.op2-impeto {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	flex: 0 0 auto;
+}
+
+.op2-impeto__label {
+	font-size: 0.7rem;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.op2-impeto__track {
+	display: flex;
+	gap: 0.25rem;
+}
+
+.op2-impeto__box {
+	width: 1.4rem;
+	height: 1.4rem;
+	padding: 0;
+	border: 2px solid var(--color-border-dark, #444);
+	border-radius: 3px;
+	background: transparent;
+	cursor: pointer;
+}
+
+.op2-impeto__box.is-filled {
+	background: var(--color-level-error, #8b1a1a);
+	border-color: var(--color-level-error, #8b1a1a);
+}
+
+/* ---------- Attributes ---------- */
+
+.op2-attributes {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 0.5rem;
+	margin-bottom: 0.75rem;
+}
+
+.op2-attribute {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.2rem;
+	padding: 0.4rem;
+	border: 1px solid var(--color-border-light-2, #b5b3a4);
+	border-radius: 4px;
+}
+
+.op2-attribute__label {
+	font-size: 0.72rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	font-weight: 700;
+}
+
+.op2-attribute__die {
+	text-align: center;
+	font-size: 1.05rem;
+}
+
+.op2-attribute__step {
+	font-size: 0.7rem;
+	font-weight: 700;
+	color: var(--color-level-warning, #a05a00);
+}
+
+/* ---------- Skills ---------- */
+
+.op2-skills__head,
+.op2-skill {
+	display: grid;
+	grid-template-columns: 1fr 6rem 5.5rem;
+	gap: 0.4rem;
+	align-items: center;
+}
+
+.op2-skills__head {
+	font-size: 0.65rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	opacity: 0.7;
+	padding-bottom: 0.2rem;
+	border-bottom: 1px solid var(--color-border-light-2, #b5b3a4);
+	margin-bottom: 0.25rem;
+}
+
+.op2-skill {
+	padding: 0.1rem 0;
+}
+
+.op2-skill:nth-child(even) {
+	background: rgba(0, 0, 0, 0.03);
+}
+
+.op2-skill__name {
+	text-align: left;
+	background: none;
+	border: none;
+	padding: 0.1rem 0.2rem;
+	cursor: pointer;
+	font-weight: 600;
+	width: 100%;
+}
+
+.op2-skill__name:hover {
+	text-shadow: 0 0 6px var(--color-shadow-primary, #ff0000);
+}
+
+.op2-skill__attribute {
+	font-size: 0.7rem;
+	opacity: 0.75;
+	text-transform: uppercase;
+}
+
+.op2-skill--nested .op2-skill__name {
+	padding-left: 1rem;
+}
+
+.op2-skills__group {
+	margin-top: 0.5rem;
+	font-size: 0.7rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	opacity: 0.8;
+}
+
+/* ---------- Abilities ---------- */
+
+.op2-abilities__toolbar {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 0.5rem;
+}
+
+.op2-ability {
+	border: 1px solid var(--color-border-light-2, #b5b3a4);
+	border-radius: 4px;
+	padding: 0.4rem;
+	margin-bottom: 0.5rem;
+}
+
+.op2-ability__head {
+	display: grid;
+	grid-template-columns: 1fr 10rem 2rem;
+	gap: 0.35rem;
+	margin-bottom: 0.35rem;
+}
+
+.op2-empty {
+	opacity: 0.6;
+	font-style: italic;
+	text-align: center;
+}
+
+/* ---------- Chat ---------- */
+
+.op2-flavor {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.35rem;
+}
+
+.op2-flavor__title {
+	font-weight: 700;
+}
+
+.op2-flavor__dice,
+.op2-flavor__dt,
+.op2-flavor__rolls {
+	font-size: 0.75rem;
+	opacity: 0.8;
+}
+
+.op2-flavor__verdict {
+	font-size: 0.72rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 0.05rem 0.35rem;
+	border-radius: 3px;
+	color: #fff;
+}
+
+.op2-flavor__verdict--success {
+	background: #1e6b3a;
+}
+
+.op2-flavor__verdict--critical-success {
+	background: #0a7d55;
+}
+
+.op2-flavor__verdict--failure {
+	background: #7a2020;
+}
+
+.op2-flavor__verdict--critical-failure {
+	background: #4a0d0d;
+}
+
+.op2-flavor__verdict--neutral {
+	background: #555;
+}
+
+/* ---------- Dialog ---------- */
+
+.op2-test-dialog__summary {
+	margin: 0 0 0.5rem;
+	font-weight: 700;
+}

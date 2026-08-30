@@ -1,0 +1,9 @@
+<section class="tab op2-biography {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+	<h3>{{localize "OP2.Field.biography"}}</h3>
+	{{formInput systemFields.biography value=system.biography enriched=enrichedBiography
+		name="system.biography" toggled=true disabled=disabled}}
+
+	<h3>{{localize "OP2.Field.notes"}}</h3>
+	{{formInput systemFields.notes value=system.notes enriched=enrichedNotes
+		name="system.notes" toggled=true disabled=disabled}}
+</section>
