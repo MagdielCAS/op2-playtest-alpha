@@ -1,0 +1,47 @@
+# Run the same checks the release runs, on every change, so a broken manifest
+# never reaches a tag.
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check the syntax of every script
+        run: |
+          FAILED=0
+          while IFS= read -r file; do
+            node --check "$file" || FAILED=1
+          done < <(find scripts .github/scripts -name '*.mjs')
+          exit "$FAILED"
+
+      - name: Check that every JSON file parses
+        run: |
+          FAILED=0
+          while IFS= read -r file; do
+            node -e "JSON.parse(require('fs').readFileSync('$file','utf8'))" \
+              || { echo "::error file=$file::invalid JSON"; FAILED=1; }
+          done < <(find . -name '*.json' -not -path './node_modules/*' -not -path './.git/*')
+          exit "$FAILED"
+
+      # The manifest still holds the committed version here, not a tag, so the
+      # placeholder check passes only when the committed manifest is complete.
+      - name: Validate the manifest, the language files and the i18n keys
+        run: node .github/scripts/validate-manifest.mjs .

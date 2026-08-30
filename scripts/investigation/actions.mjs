@@ -1,6 +1,7 @@
 import { MODULE_ID, OP2 } from "../config.mjs";
 import { requestReveal } from "../socket.mjs";
 import { dieLabel } from "../dice/die-step.mjs";
+import { attemptAccess } from "./access.mjs";
 
 /**
  * The actor a player is acting with: the controlled token first, then the
@@ -31,8 +32,10 @@ export async function postPointOfInterest(item) {
 			item,
 			system: item.system,
 			skills: item.system.skillKeys,
-			access: item.system.access.map((route) => ({
+			access: item.system.access.map((route, index) => ({
 				...route,
+				index,
+				interactive: OP2.interactiveAccess.includes(route.type),
 				typeLabel: game.i18n.localize(OP2.accessTypes[route.type] ?? route.type),
 			})),
 			hasAccess: item.system.access.length > 0,
@@ -137,7 +140,9 @@ export function registerInvestigationListener() {
 	if (document.body[marker]) return;
 
 	const handler = async (event) => {
-		const button = event.target.closest("[data-action='op2Investigate'], [data-action='op2Examine']");
+		const button = event.target.closest(
+			"[data-action='op2Investigate'], [data-action='op2Examine'], [data-action='op2Access']"
+		);
 		if (!button) return;
 		event.preventDefault();
 
@@ -147,11 +152,12 @@ export function registerInvestigationListener() {
 		const item = await fromUuid(button.dataset.itemUuid);
 		if (!item) return ui.notifications.warn(game.i18n.localize("OP2.Notification.noPoint"));
 
-		const skillKey = button.dataset.skill;
+		const { action, skill } = button.dataset;
 		button.disabled = true;
 		try {
-			if (button.dataset.action === "op2Investigate") await investigate(actor, item, skillKey);
-			else await examine(actor, item, skillKey);
+			if (action === "op2Investigate") await investigate(actor, item, skill);
+			else if (action === "op2Examine") await examine(actor, item, skill);
+			else await attemptAccess(actor, item, Number(button.dataset.index));
 		} finally {
 			button.disabled = false;
 		}

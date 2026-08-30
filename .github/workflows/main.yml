@@ -1,144 +1,119 @@
-# GitHub Actions workflow for creating a new FoundryVTT module release.
+# Publish a Foundry VTT module release.
 #
-# Useful References:
-#   - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
-#   - https://docs.github.com/en/actions/learn-github-actions/contexts
-#   - https://docs.github.com/en/actions/learn-github-actions/environment-variables
-#
-# Troubleshooting Checklist:
-#   - Is the module's manifest file valid JSON?
-#     You can test your manifest file using https://jsonlint.com/.
-#
-#   - Does the module's manifest have all the required keys?
-#     See https://foundryvtt.com/article/module-development/#manifest for more
-#     information.
-#
-#   - Are all the proper files and directories being included in the release's
-#     module archive ("module.zip")?
-#     Check that the correct files are being passed to the `zip` command run
-#     in the "Create Module Archive" step below.
-#
-#   - Is the release tag the proper format?
-#     See the comments for the "Extract Version From Tag" step below.
-#
-#   - Is a GitHub release being published?
-#     This workflow will only run when a release is published, not when a
-#     release is updated. Furthermore, note that while a GitHub release will
-#     (by default) create a repository tag, a repository tag will not create
-#     or publish a GitHub release.
-#
-#   - Has the module's entry on FoundryVTT's module administration site
-#     (https://foundryvtt.com/admin) been updated?
-#
-name: Create Module Files For GitHub Release
-
-
-env:
-  # The URL used for the module's "Project URL" link on FoundryVTT's website.
-  project_url: "https://github.com/${{github.repository}}"
-
-  # A URL that will always point to the latest manifest.
-  # FoundryVTT uses this URL to check whether the current module version that
-  # is installed is the latest version. This URL should NOT change,
-  # otherwise FoundryVTT won't be able to perform this check.
-  latest_manifest_url: "https://github.com/${{github.repository}}/releases/latest/download/module.json"
-
-  # The URL to the module archive associated with the module release being
-  # processed by this workflow.
-  release_module_url: "https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip"
-
+# The archive must contain every path the manifest declares. Foundry checks
+# this at install time and refuses the package with `PACKAGE.InstallFailed`
+# when one is missing, so this workflow unpacks its own archive and validates
+# it before the release is updated.
+name: Release
 
 on:
-  # Only run this workflow when a release is published.
-  # To modify this workflow when other events occur, see:
-  #   - https://docs.github.com/en/actions/using-workflows/triggering-a-workflow
-  #   - https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
-  #   - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
-  #
-  # Note that some steps may depend on context variables that are only
-  # available for release events, so if you add other events, you may need to
-  # alter other parts of this workflow.
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build, for example v0.2.0"
+        required: true
 
+permissions:
+  contents: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v7
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-
-      # Extract version embedded in the tag.
-      # This step expects the tag to be one of the following formats:
-      #   - "v<major>.<minor>.<patch>" (e.g., "v1.2.3")
-      #   - "<major>.<minor>.<patch>"  (e.g., "1.2.3")
-      #
-      # The version will be used by later steps to fill in the value for the
-      # "version" key required for a valid module manifest.
-      - name: Extract Version From Tag
-        id: get_version
-        uses: battila7/get-version-action@v2
-
-
-      # Modify "module.json" with values specific to the release.
-      # Since the values for the "version" and "url" keys aren't known ahead of
-      # time, the manifest file in the repository is updated with these values.
-      #
-      # While this does modify the manifest file in-place, the changes are not
-      # commited to the repository, and only exist in the action's filesystem.
-      - name: Modify Module Manifest With Release-Specific Values
-        id: sub_manifest_link_version
-        uses: cschleiden/replace-tokens@v1
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          files: 'module.json'
-        env:
-          VERSION: ${{steps.get_version.outputs.version-without-v}}
-          URL: ${{ env.project_url }}
-          MANIFEST: ${{ env.latest_manifest_url }}
-          DOWNLOAD: ${{ env.release_module_url }}
+          node-version: "20"
 
-
-      # Create a "module.zip" archive containing all the module's required files.
-      # If you have other directories or files that will need to be added to
-      # your packaged module, add them here.
-      - name: Create Module Archive
+      # The tag is the single source of truth for the version.
+      # Accepts "v1.2.3" and "1.2.3".
+      - name: Resolve version from the tag
+        id: version
         run: |
-          # Note that `zip` will only emit warnings when a file or directory
-          # doesn't exist, it will not fail.
-          zip                                    \
-            `# Options`                          \
-            --recurse-paths                      \
-            `# The name of the output file`      \
-             ./module.zip                        \
-            `# The files that will be included.` \
-            module.json                          \
-            README.md                            \
-            LICENSE                              \
-            templates                            \
-            scripts/                             \
-            styles/                              \
-            packs/                               \
-            language/                            \
-            lang/
-          # Don't forget to add a backslash at the end of the line for any
-          # additional files or directories!
+          TAG="${{ github.event.release.tag_name || inputs.tag }}"
+          VERSION="${TAG#v}"
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-+].+)?$ ]]; then
+            echo "::error::Tag '$TAG' is not a semantic version."
+            exit 1
+          fi
+          echo "tag=$TAG"         >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
+      # Write the release values into the manifest. `manifest` keeps pointing at
+      # "latest" so Foundry can detect future updates; `download` points at this
+      # exact tag.
+      - name: Stamp the manifest
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+          VERSION: ${{ steps.version.outputs.version }}
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+        run: |
+          jq --arg version "$VERSION" \
+             --arg url "$REPO_URL" \
+             --arg manifest "$REPO_URL/releases/latest/download/module.json" \
+             --arg download "$REPO_URL/releases/download/$TAG/module.zip" \
+             '.version = $version | .url = $url | .manifest = $manifest | .download = $download' \
+             module.json > module.stamped.json
+          mv module.stamped.json module.json
+          cat module.json
 
-      # Update the GitHub release with the manifest and module archive files.
-      - name: Update Release With Files
-        id: create_version_release
+      - name: Validate the source tree
+        run: node .github/scripts/validate-manifest.mjs .
+
+      # Only the files the module needs at runtime. Every entry must exist:
+      # `zip` merely warns on a missing path, so the list is checked first.
+      - name: Create the module archive
+        run: |
+          CONTENTS=(
+            module.json
+            README.md
+            LICENSE
+            scripts
+            styles
+            templates
+            languages
+          )
+          MISSING=0
+          for path in "${CONTENTS[@]}"; do
+            if [ ! -e "$path" ]; then
+              echo "::error::Archive content '$path' does not exist in the repository."
+              MISSING=1
+            fi
+          done
+          [ "$MISSING" -eq 0 ] || exit 1
+
+          # `packs` is optional: include it only when the module ships compendia.
+          [ -d packs ] && CONTENTS+=(packs)
+
+          # Leftovers of the module template that no manifest entry points at.
+          zip --recurse-paths ./module.zip "${CONTENTS[@]}" \
+            --exclude 'scripts/module.js' \
+            --exclude 'scripts/lib/*' \
+            --exclude 'styles/module.css'
+
+      # The real guard against the missing-file install error: validate the
+      # archive itself, not the repository.
+      - name: Validate the archive
+        run: |
+          unzip -q -o ./module.zip -d ./verify
+          node .github/scripts/validate-manifest.mjs ./verify
+          echo "--- archive contents ---"
+          unzip -l ./module.zip
+
+      - name: Attach the files to the release
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          name: ${{ github.event.release.name }}
-          draft: ${{ github.event.release.unpublished }}
-          prerelease: ${{ github.event.release.prerelease }}
+          omitNameDuringUpdate: true
+          omitBodyDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
+          replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: './module.json, ./module.zip'
-          tag: ${{ github.event.release.tag_name }}
-          body: ${{ github.event.release.body }}
+          tag: ${{ steps.version.outputs.tag }}
+          artifacts: "./module.json,./module.zip"

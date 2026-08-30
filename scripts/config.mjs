@@ -106,9 +106,23 @@ export const OP2 = {
 		destrancar: "OP2.Access.destrancar",
 		arrombar: "OP2.Access.arrombar",
 		alcancar: "OP2.Access.alcancar",
+		sustentar: "OP2.Access.sustentar",
 		hackTecnico: "OP2.Access.hackTecnico",
 		hackSocial: "OP2.Access.hackSocial",
 		item: "OP2.Access.item",
+	},
+
+	/** Access routes the module resolves on its own. The rest is GM narration. */
+	interactiveAccess: ["arrombar", "alcancar", "sustentar"],
+
+	/** Costs and modifiers of the access challenges. */
+	access: {
+		/** `Arrombar` costs 1 PV per attempt and accumulates the RA. */
+		arrombar: { skill: "athletics", cost: { resource: "pv", amount: 1 } },
+		/** `Alcançar`: the safe way needs two actions, the risky way adds +3 to the DT. */
+		alcancar: { skill: "acrobatics", safeActions: 2, riskyPenalty: 3 },
+		/** `Sustentar` costs 1 PV, then loses one step per round of fatigue. */
+		sustentar: { skill: "athletics", cost: { resource: "pv", amount: 1 } },
 	},
 
 	/** Cost of an `Examinar` that reveals nothing new. */

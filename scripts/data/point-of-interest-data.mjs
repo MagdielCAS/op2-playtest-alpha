@@ -38,6 +38,10 @@ function accessField() {
 		/** Maximum attempts before the lock breaks. Zero means no limit. */
 		maxAttempts: new fields.NumberField({ required: true, integer: true, min: 0, initial: 0 }),
 		notes: new fields.StringField({ required: true, blank: true, initial: "" }),
+		/** Score accumulated by `Arrombar`. */
+		progress: new fields.NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+		/** Actions already completed: the safe `Alcançar`, or rounds of `Sustentar`. */
+		stage: new fields.NumberField({ required: true, integer: true, min: 0, initial: 0 }),
 		solved: new fields.BooleanField({ initial: false }),
 	});
 }

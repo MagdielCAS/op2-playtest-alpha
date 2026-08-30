@@ -1,0 +1,39 @@
+<div class="op2-card op2-card--access">
+	<header class="op2-card__head">
+		<span class="op2-card__title">{{routeLabel}}</span>
+		<span class="op2-card__mode">{{actionLabel}}</span>
+		<span class="op2-card__skill">{{item.name}}</span>
+	</header>
+
+	{{#if success}}
+	<p class="op2-card__ok">{{localize "OP2.Access.passed"}}</p>
+	{{else}}
+	<p class="op2-card__cost">{{localize "OP2.Access.failed"}}</p>
+	{{/if}}
+
+	{{#if gained}}
+	<p class="op2-card__progress">{{localize "OP2.Access.gained"}} <strong>+{{gained}}</strong> (RA)</p>
+	{{/if}}
+
+	{{#if target}}
+	<p class="op2-card__progress">
+		{{#if showStage}}
+		{{localize "OP2.Access.stage"}} <strong>{{stage}} / {{target}}</strong>
+		{{else}}
+		{{localize "OP2.Access.score"}} <strong>{{progress}} / {{target}}</strong>
+		{{/if}}
+	</p>
+	{{/if}}
+
+	{{#if damage}}
+	<p class="op2-card__cost">{{localize "OP2.Access.damage"}} <strong>{{damage}}</strong> PV</p>
+	{{/if}}
+
+	{{#if fatigue}}
+	<p class="op2-card__fatigue">{{localize "OP2.Access.fatigue"}} <strong>-{{fatigue}}</strong></p>
+	{{/if}}
+
+	{{#if cost}}<p class="op2-card__cost">{{cost}}</p>{{/if}}
+
+	{{#if solved}}<p class="op2-card__ok op2-card__solved">{{localize "OP2.Access.opened"}}</p>{{/if}}
+</div>

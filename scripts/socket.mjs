@@ -35,6 +35,40 @@ export async function applyReveal(itemUuid, infoIds) {
 /* -------------------------------------------- */
 
 /**
+ * Change one access route of a point of interest. Same GM-authoritative path as
+ * the reveals, because the point of interest is a world Item.
+ * @param {string} itemUuid  UUID of the point of interest.
+ * @param {number} index     Position of the route.
+ * @param {object} changes   Fields to write, for example `{progress: 7}`.
+ * @returns {Promise<void>}
+ */
+export async function requestAccessUpdate(itemUuid, index, changes) {
+	if (game.user.isGM) return applyAccessUpdate(itemUuid, index, changes);
+	game.socket.emit(SOCKET, { type: "updateAccess", itemUuid, index, changes, userId: game.user.id });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Write the access change. Runs on a GM client only.
+ * @param {string} itemUuid  UUID of the point of interest.
+ * @param {number} index     Position of the route.
+ * @param {object} changes   Fields to write.
+ * @returns {Promise<void>}
+ */
+export async function applyAccessUpdate(itemUuid, index, changes) {
+	const item = await fromUuid(itemUuid);
+	if (!item?.isOwner) return;
+
+	const routes = item.system.toObject().access;
+	if (!routes[index]) return;
+	routes[index] = { ...routes[index], ...changes };
+	await item.update({ "system.access": routes });
+}
+
+/* -------------------------------------------- */
+
+/**
  * Listen for reveal requests. Only the first active GM answers, so the write
  * happens exactly once.
  */
@@ -42,7 +76,7 @@ export function registerSocket() {
 	game.socket.on(SOCKET, async (data) => {
 		const firstGM = game.users.find((u) => u.isGM && u.active);
 		if (!firstGM || firstGM.id !== game.user.id) return;
-		if (data?.type !== "revealInfos") return;
-		await applyReveal(data.itemUuid, data.infoIds);
+		if (data?.type === "revealInfos") await applyReveal(data.itemUuid, data.infoIds);
+		else if (data?.type === "updateAccess") await applyAccessUpdate(data.itemUuid, data.index, data.changes);
 	});
 }

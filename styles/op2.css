@@ -566,3 +566,38 @@
 	color: #7a2020;
 	margin: 0.25rem 0;
 }
+
+/* ---------- Access challenge cards ---------- */
+
+.op2-card__route-row {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.1rem 0;
+}
+
+.op2-card__route-row button {
+	width: auto;
+	font-size: 0.7rem;
+	padding: 0 0.4rem;
+	line-height: 1.6;
+	cursor: pointer;
+	margin-left: auto;
+}
+
+.op2-card__ok {
+	font-weight: 700;
+	color: #1e6b3a;
+	margin: 0.2rem 0;
+}
+
+.op2-card__solved {
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.op2-card__progress,
+.op2-card__fatigue {
+	margin: 0.2rem 0;
+	font-size: 0.8rem;
+}

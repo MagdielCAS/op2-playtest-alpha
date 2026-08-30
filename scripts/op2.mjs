@@ -28,6 +28,7 @@ import {
 	resolveActor,
 	registerInvestigationListener,
 } from "./investigation/actions.mjs";
+import { attemptAccess } from "./investigation/access.mjs";
 import { registerSocket } from "./socket.mjs";
 
 /** Add the OP2 Roll class without dropping the classes of the base system. */
@@ -67,6 +68,7 @@ Hooks.once("init", () => {
 		`modules/${MODULE_ID}/templates/investigation/poi-notes.hbs`,
 		`modules/${MODULE_ID}/templates/investigation/point-card.hbs`,
 		`modules/${MODULE_ID}/templates/investigation/result-card.hbs`,
+		`modules/${MODULE_ID}/templates/investigation/access-card.hbs`,
 	]);
 
 	const module = game.modules.get(MODULE_ID);
@@ -85,6 +87,7 @@ Hooks.once("init", () => {
 			postPointOfInterest,
 			investigate,
 			examine,
+			attemptAccess,
 			resolveActor,
 			stepDie,
 			dieLabel,
