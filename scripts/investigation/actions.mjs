@@ -1,7 +1,13 @@
 import { MODULE_ID, OP2 } from "../config.mjs";
-import { requestReveal } from "../socket.mjs";
-import { dieLabel } from "../dice/die-step.mjs";
+import { request } from "../socket.mjs";
 import { attemptAccess } from "./access.mjs";
+import { buildRouteButton } from "./handlers.mjs";
+
+/**
+ * Client side of an investigation scene. The player's client knows their own
+ * actor and their own rolls; everything about the point of interest is resolved
+ * by a GM, because a world Item never reaches a player's client.
+ */
 
 /**
  * The actor a player is acting with: the controlled token first, then the
@@ -13,15 +19,14 @@ export function resolveActor() {
 	const fromToken = controlled.find((token) => token.actor?.type === OP2.agentType)?.actor;
 	if (fromToken) return fromToken;
 	const assigned = game.user.character;
-	if (assigned?.type === OP2.agentType) return assigned;
-	return null;
+	return assigned?.type === OP2.agentType ? assigned : null;
 }
 
 /* -------------------------------------------- */
 
 /**
- * Post the card of a point of interest: the basic description, plus one button
- * per skill of its table. The DTs stay hidden from the players.
+ * Post the card of a point of interest. The GM runs this, so the card can carry
+ * every value a player's client will need.
  * @param {Item} item  The point of interest.
  * @returns {Promise<ChatMessage>}
  */
@@ -32,12 +37,7 @@ export async function postPointOfInterest(item) {
 			item,
 			system: item.system,
 			skills: item.system.skillKeys,
-			access: item.system.access.map((route, index) => ({
-				...route,
-				index,
-				interactive: OP2.interactiveAccess.includes(route.type),
-				typeLabel: game.i18n.localize(OP2.accessTypes[route.type] ?? route.type),
-			})),
+			access: item.system.access.map((route, index) => buildRouteButton(item, route, index)),
 			hasAccess: item.system.access.length > 0,
 		}
 	);
@@ -48,85 +48,44 @@ export async function postPointOfInterest(item) {
 /* -------------------------------------------- */
 
 /**
- * `Investigar` with one skill. The book compares the DTs against the VALUE the
- * character has in that skill, not against a roll.
+ * `Investigar`: the book compares the row DTs against the VALUE the character
+ * has in the skill, not against a roll.
  * @param {Actor} actor      Character investigating.
- * @param {Item} item        Point of interest.
+ * @param {string} itemUuid  Point of interest.
  * @param {string} skillKey  Skill chosen.
- * @returns {Promise<ChatMessage>}
+ * @returns {Promise<void>}
  */
-export async function investigate(actor, item, skillKey) {
-	const faces = actor.system.skills[skillKey].faces;
-	const found = item.system.pendingInfos(skillKey, faces);
-	await requestReveal(item.uuid, found.map((info) => info.id));
-
-	return postResult(actor, item, skillKey, {
-		mode: "investigate",
-		measure: game.i18n.format("OP2.Investigation.value", { die: dieLabel(faces) }),
-		found,
+export async function investigate(actor, itemUuid, skillKey) {
+	await request("investigate", {
+		itemUuid,
+		actorUuid: actor.uuid,
+		skillKey,
+		value: actor.system.skills[skillKey].faces,
 	});
 }
 
 /* -------------------------------------------- */
 
 /**
- * `Examinar`: roll the skill and reveal every new line the result reaches.
- * When nothing new comes out, the character loses 1 PD.
+ * `Examinar`: roll the skill, then let the GM reveal what the result reaches.
+ * A test that finds nothing new costs 1 PD.
  * @param {Actor} actor      Character examining.
- * @param {Item} item        Point of interest.
+ * @param {string} itemUuid  Point of interest.
  * @param {string} skillKey  Skill chosen.
- * @returns {Promise<ChatMessage|null>}  Null when the player cancels the roll.
+ * @returns {Promise<void>}
  */
-export async function examine(actor, item, skillKey) {
+export async function examine(actor, itemUuid, skillKey) {
+	// `Examinar` has no DT of its own: the result is read against the row DTs.
 	const roll = await actor.system.rollTest({ skillKey, dt: null, configure: true });
-	if (!roll) return null;
+	if (!roll) return;
 
-	const found = item.system.pendingInfos(skillKey, roll.total);
-	await requestReveal(item.uuid, found.map((info) => info.id));
-
-	let cost = null;
-	if (!found.length) {
-		const { resource, amount } = OP2.examineCost;
-		const current = actor.system[resource].value;
-		await actor.update({ [`system.${resource}.value`]: Math.max(0, current - amount) });
-		cost = game.i18n.format("OP2.Investigation.cost", {
-			amount,
-			resource: game.i18n.localize(`OP2.Field.${resource}`),
-		});
-	}
-
-	return postResult(actor, item, skillKey, {
-		mode: "examine",
-		measure: game.i18n.format("OP2.Investigation.result", { total: roll.total }),
-		found,
-		cost,
+	await request("examine", {
+		itemUuid,
+		actorUuid: actor.uuid,
+		skillKey,
+		total: roll.total,
 		critical: roll.evaluation?.criticalSuccess ?? false,
 	});
-}
-
-/* -------------------------------------------- */
-
-/**
- * Post what an investigation action produced.
- * @param {Actor} actor      Character acting.
- * @param {Item} item        Point of interest.
- * @param {string} skillKey  Skill used.
- * @param {object} data      Result of the action.
- * @returns {Promise<ChatMessage>}
- */
-async function postResult(actor, item, skillKey, data) {
-	const content = await foundry.applications.handlebars.renderTemplate(
-		`modules/${MODULE_ID}/templates/investigation/result-card.hbs`,
-		{
-			...data,
-			item,
-			skillLabel: game.i18n.localize(OP2.skills[skillKey].label),
-			canExamine: data.mode === "investigate",
-			skillKey,
-		}
-	);
-
-	return ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
 }
 
 /* -------------------------------------------- */
@@ -149,15 +108,12 @@ export function registerInvestigationListener() {
 		const actor = resolveActor();
 		if (!actor) return ui.notifications.warn(game.i18n.localize("OP2.Notification.noActor"));
 
-		const item = await fromUuid(button.dataset.itemUuid);
-		if (!item) return ui.notifications.warn(game.i18n.localize("OP2.Notification.noPoint"));
-
-		const { action, skill } = button.dataset;
+		const { action, skill, itemUuid } = button.dataset;
 		button.disabled = true;
 		try {
-			if (action === "op2Investigate") await investigate(actor, item, skill);
-			else if (action === "op2Examine") await examine(actor, item, skill);
-			else await attemptAccess(actor, item, Number(button.dataset.index));
+			if (action === "op2Investigate") await investigate(actor, itemUuid, skill);
+			else if (action === "op2Examine") await examine(actor, itemUuid, skill);
+			else await attemptAccess(actor, { ...button.dataset });
 		} finally {
 			button.disabled = false;
 		}

@@ -38,6 +38,22 @@ function accessField() {
 		/** Maximum attempts before the lock breaks. Zero means no limit. */
 		maxAttempts: new fields.NumberField({ required: true, integer: true, min: 0, initial: 0 }),
 		notes: new fields.StringField({ required: true, blank: true, initial: "" }),
+		/** Hidden combination of `Destrancar`, in the order the dice were rolled. */
+		combination: new fields.ArrayField(new fields.NumberField({ integer: true, min: 1 }), { initial: [] }),
+		/** Faces of the dice of that combination, so the guess form can bound its inputs. */
+		combinationFaces: new fields.NumberField({ required: true, integer: true, min: 2, initial: 6 }),
+		/** Every guess made, with the answer given. */
+		attempts: new fields.ArrayField(
+			new fields.SchemaField({
+				guess: new fields.ArrayField(new fields.NumberField({ integer: true, min: 1 }), { initial: [] }),
+				feedback: new fields.ArrayField(new fields.StringField(), { initial: [] }),
+				actorName: new fields.StringField({ required: true, blank: true, initial: "" }),
+			}),
+			{ initial: [] }
+		),
+		/** A lock that ran out of attempts can no longer be picked. */
+		broken: new fields.BooleanField({ initial: false }),
+
 		/** Score accumulated by `Arrombar`. */
 		progress: new fields.NumberField({ required: true, integer: true, min: 0, initial: 0 }),
 		/** Actions already completed: the safe `Alcançar`, or rounds of `Sustentar`. */

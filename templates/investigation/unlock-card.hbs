@@ -1,0 +1,30 @@
+<div class="op2-card op2-card--unlock">
+	<header class="op2-card__head">
+		<span class="op2-card__title">{{routeLabel}}</span>
+		<span class="op2-card__mode">{{localize "OP2.Access.destrancar"}}</span>
+		<span class="op2-card__skill">{{item.name}}</span>
+	</header>
+
+	<div class="op2-unlock__answer">
+		{{#each dice as |die|}}
+		<span class="op2-unlock__die op2-unlock__die--{{die.feedback}}">
+			<span class="op2-unlock__value">{{die.value}}</span>
+			<span class="op2-unlock__feedback">{{die.label}}</span>
+		</span>
+		{{/each}}
+	</div>
+
+	<p class="op2-card__progress">
+		{{localize "OP2.Unlock.attempts"}} <strong>{{used}}</strong>
+		{{#if remaining}} · {{localize "OP2.Unlock.remaining"}} <strong>{{remaining}}</strong>{{/if}}
+		· {{localize "OP2.Unlock.perRoundShort"}} <strong>{{perRound}}</strong>
+	</p>
+
+	{{#if solved}}
+	<p class="op2-card__ok op2-card__solved">{{localize "OP2.Access.opened"}}</p>
+	{{else if broken}}
+	<p class="op2-card__cost op2-card__solved">{{localize "OP2.Unlock.brokenLong"}}</p>
+	{{else}}
+	{{> "modules/op2-playtest-alpha/templates/investigation/route-button.hbs" button}}
+	{{/if}}
+</div>

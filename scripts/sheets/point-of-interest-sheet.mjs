@@ -1,5 +1,6 @@
 import { MODULE_ID, OP2 } from "../config.mjs";
 import { postPointOfInterest } from "../investigation/actions.mjs";
+import { parseCombinationFormula } from "../investigation/unlock.mjs";
 
 const { api, sheets, ux } = foundry.applications;
 
@@ -23,6 +24,7 @@ export class OP2PointOfInterestSheet extends api.HandlebarsApplicationMixin(shee
 			addRow: OP2PointOfInterestSheet.#onAddRow,
 			deleteRow: OP2PointOfInterestSheet.#onDeleteRow,
 			resetReveals: OP2PointOfInterestSheet.#onResetReveals,
+			rollCombination: OP2PointOfInterestSheet.#onRollCombination,
 		},
 	};
 
@@ -68,7 +70,13 @@ export class OP2PointOfInterestSheet extends api.HandlebarsApplicationMixin(shee
 		context.resourceChoices = { pv: "OP2.Field.pv", pd: "OP2.Field.pd" };
 
 		context.infos = system.resolvedInfos.map((info, index) => ({ ...info, index }));
-		context.accessRows = system.access.map((route, index) => ({ ...route, index }));
+		context.accessRows = system.access.map((route, index) => ({
+			...route,
+			index,
+			isUnlock: route.type === "destrancar",
+			combinationText: route.combination.join(" - "),
+			attemptsUsed: route.attempts.length,
+		}));
 		context.toolRows = system.tools.map((tool, index) => ({ ...tool, index }));
 
 		return context;
@@ -136,6 +144,33 @@ export class OP2PointOfInterestSheet extends api.HandlebarsApplicationMixin(shee
 		const rows = this.item.system.toObject()[list] ?? [];
 		rows.splice(Number(target.dataset.index), 1);
 		return this.item.update({ [`system.${list}`]: rows });
+	}
+
+	/**
+	 * Roll the hidden combination of a `Destrancar` route from its formula, and
+	 * clear the guesses already made. Only the GM ever sees the numbers.
+	 */
+	static async #onRollCombination(_event, target) {
+		if (!this.isEditable) return;
+		const index = Number(target.dataset.index);
+		const routes = this.item.system.toObject().access;
+		const route = routes[index];
+		if (!route) return;
+
+		const parsed = parseCombinationFormula(route.password);
+		if (!parsed) return ui.notifications.warn(game.i18n.localize("OP2.Unlock.badFormula"));
+
+		const roll = await new Roll(`${parsed.count}d${parsed.faces}`).evaluate();
+		routes[index] = {
+			...route,
+			combination: roll.dice[0].results.map((result) => result.result),
+			combinationFaces: parsed.faces,
+			attempts: [],
+			broken: false,
+			solved: false,
+		};
+		await this.item.update({ "system.access": routes });
+		ui.notifications.info(game.i18n.localize("OP2.Unlock.generated"));
 	}
 
 	/** Hide every line again, to run the scene with another group. */

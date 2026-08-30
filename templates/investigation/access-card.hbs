@@ -25,15 +25,13 @@
 	</p>
 	{{/if}}
 
-	{{#if damage}}
-	<p class="op2-card__cost">{{localize "OP2.Access.damage"}} <strong>{{damage}}</strong> PV</p>
-	{{/if}}
-
-	{{#if fatigue}}
-	<p class="op2-card__fatigue">{{localize "OP2.Access.fatigue"}} <strong>-{{fatigue}}</strong></p>
-	{{/if}}
-
+	{{#if damage}}<p class="op2-card__cost">{{localize "OP2.Access.damage"}} <strong>{{damage}}</strong> PV</p>{{/if}}
+	{{#if fatigue}}<p class="op2-card__fatigue">{{localize "OP2.Access.fatigue"}} <strong>-{{fatigue}}</strong></p>{{/if}}
 	{{#if cost}}<p class="op2-card__cost">{{cost}}</p>{{/if}}
 
-	{{#if solved}}<p class="op2-card__ok op2-card__solved">{{localize "OP2.Access.opened"}}</p>{{/if}}
+	{{#if solved}}
+	<p class="op2-card__ok op2-card__solved">{{localize "OP2.Access.opened"}}</p>
+	{{else}}
+	{{> "modules/op2-playtest-alpha/templates/investigation/route-button.hbs" button}}
+	{{/if}}
 </div>

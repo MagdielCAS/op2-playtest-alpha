@@ -113,7 +113,7 @@ export const OP2 = {
 	},
 
 	/** Access routes the module resolves on its own. The rest is GM narration. */
-	interactiveAccess: ["arrombar", "alcancar", "sustentar"],
+	interactiveAccess: ["destrancar", "arrombar", "alcancar", "sustentar"],
 
 	/** Costs and modifiers of the access challenges. */
 	access: {

@@ -1,0 +1,16 @@
+<div class="op2-card__route-row">
+	<i class="fa-solid {{#if solved}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
+	<span class="op2-card__route">{{typeLabel}}{{#if label}} — {{label}}{{/if}}</span>
+	{{#if broken}}<span class="op2-card__broken">{{localize "OP2.Unlock.broken"}}</span>{{/if}}
+	{{#if interactive}}
+	<button type="button" data-action="op2Access" data-item-uuid="{{itemUuid}}" data-index="{{index}}"
+		data-type="{{type}}" data-dt="{{dt}}"
+		{{#if skill}}data-skill="{{skill}}"{{/if}}
+		{{#if riskyDt}}data-risky-dt="{{riskyDt}}"{{/if}}
+		{{#if steps}}data-steps="{{steps}}"{{/if}}
+		{{#if dice}}data-dice="{{dice}}" data-faces="{{faces}}"{{/if}}
+		{{#if solved}}disabled{{/if}}>
+		{{localize "OP2.Access.attempt"}}
+	</button>
+	{{/if}}
+</div>

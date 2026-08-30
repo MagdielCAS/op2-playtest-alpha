@@ -12,16 +12,7 @@
 	{{#if hasAccess}}
 	<div class="op2-card__access">
 		{{#each access as |route|}}
-		<div class="op2-card__route-row">
-			<i class="fa-solid {{#if route.solved}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
-			<span class="op2-card__route">{{route.typeLabel}}{{#if route.label}} — {{route.label}}{{/if}}</span>
-			{{#if route.interactive}}
-			<button type="button" data-action="op2Access" data-item-uuid="{{../item.uuid}}"
-				data-index="{{route.index}}" {{#if route.solved}}disabled{{/if}}>
-				{{localize "OP2.Access.attempt"}}
-			</button>
-			{{/if}}
-		</div>
+		{{> "modules/op2-playtest-alpha/templates/investigation/route-button.hbs" route}}
 		{{/each}}
 	</div>
 	{{/if}}

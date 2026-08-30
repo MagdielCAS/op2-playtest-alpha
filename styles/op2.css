@@ -601,3 +601,96 @@
 	margin: 0.2rem 0;
 	font-size: 0.8rem;
 }
+
+/* ---------- Destrancar ---------- */
+
+.op2-unlock__row {
+	display: flex;
+	gap: 0.35rem;
+	justify-content: center;
+	margin: 0.5rem 0;
+}
+
+.op2-unlock__input {
+	width: 3rem;
+	text-align: center;
+	font-size: 1.1rem;
+	font-weight: 700;
+}
+
+.op2-unlock__answer {
+	display: flex;
+	gap: 0.35rem;
+	flex-wrap: wrap;
+	margin: 0.35rem 0;
+}
+
+.op2-unlock__die {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-width: 3rem;
+	padding: 0.15rem 0.3rem;
+	border-radius: 3px;
+	border: 2px solid transparent;
+	background: rgba(0, 0, 0, 0.05);
+}
+
+.op2-unlock__value {
+	font-size: 1.05rem;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.op2-unlock__feedback {
+	font-size: 0.62rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.op2-unlock__die--exact {
+	border-color: #1e6b3a;
+	color: #1e6b3a;
+}
+
+.op2-unlock__die--low {
+	border-color: #2a5d8f;
+	color: #2a5d8f;
+}
+
+.op2-unlock__die--high {
+	border-color: #a05a00;
+	color: #a05a00;
+}
+
+.op2-card__broken {
+	font-size: 0.68rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	background: #4a0d0d;
+	color: #fff;
+	border-radius: 3px;
+	padding: 0 0.3rem;
+}
+
+.op2-access__unlock {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin-bottom: 0.3rem;
+	flex-wrap: wrap;
+}
+
+.op2-access__combination {
+	font-family: monospace;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	background: rgba(0, 0, 0, 0.06);
+	border-radius: 3px;
+	padding: 0.05rem 0.4rem;
+}
+
+.op2-access__used {
+	font-size: 0.7rem;
+	opacity: 0.8;
+}

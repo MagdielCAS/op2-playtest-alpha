@@ -32,6 +32,18 @@
 				name="system.access.{{route.index}}.maxAttempts" value="{{route.maxAttempts}}" step="1" min="0"
 				{{#unless ../isEditable}}disabled{{/unless}} /></label>
 		</div>
+		{{#if route.isUnlock}}
+		<div class="op2-access__unlock">
+			<button type="button" data-action="rollCombination" data-index="{{route.index}}"
+				{{#unless ../isEditable}}disabled{{/unless}}>
+				<i class="fa-solid fa-dice"></i> {{localize "OP2.Unlock.generate"}}
+			</button>
+			<span class="op2-access__combination"
+				data-tooltip="{{localize 'OP2.Unlock.secretHint'}}">{{route.combinationText}}</span>
+			<span class="op2-access__used">{{localize "OP2.Unlock.attempts"}} {{route.attemptsUsed}}</span>
+			{{#if route.broken}}<span class="op2-card__broken">{{localize "OP2.Unlock.broken"}}</span>{{/if}}
+		</div>
+		{{/if}}
 		<textarea name="system.access.{{route.index}}.notes" rows="2"
 			placeholder="{{localize 'OP2.Poi.accessNotes'}}"
 			{{#unless ../isEditable}}disabled{{/unless}}>{{route.notes}}</textarea>
