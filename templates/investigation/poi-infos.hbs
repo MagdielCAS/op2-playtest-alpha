@@ -1,0 +1,45 @@
+<section class="tab op2-poi__infos {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+	<div class="op2-poi__toolbar">
+		<button type="button" data-action="addRow" data-list="infos" {{#unless isEditable}}disabled{{/unless}}>
+			<i class="fa-solid fa-plus"></i> {{localize "OP2.Poi.addInfo"}}
+		</button>
+		<button type="button" data-action="resetReveals" {{#unless isEditable}}disabled{{/unless}}>
+			<i class="fa-solid fa-eye-slash"></i> {{localize "OP2.Poi.resetReveals"}}
+		</button>
+	</div>
+
+	{{#each infos as |info|}}
+	<div class="op2-info{{#if info.revealed}} is-revealed{{/if}}">
+		<div class="op2-info__head">
+			<select name="system.infos.{{info.index}}.skill" {{#unless ../isEditable}}disabled{{/unless}}>
+				{{selectOptions ../skillChoices selected=info.skill localize=true}}
+			</select>
+			<input type="text" name="system.infos.{{info.index}}.qualifier" value="{{info.qualifier}}"
+				placeholder="{{localize 'OP2.Poi.qualifier'}}" {{#unless ../isEditable}}disabled{{/unless}} />
+			<input class="op2-info__dt" type="number" name="system.infos.{{info.index}}.dt" value="{{info.dt}}"
+				step="1" min="0" placeholder="DT" {{#unless ../isEditable}}disabled{{/unless}} />
+			<label class="op2-info__toggle" data-tooltip="{{localize 'OP2.Poi.lockedHint'}}">
+				<input type="checkbox" name="system.infos.{{info.index}}.locked" {{checked info.locked}}
+					{{#unless ../isEditable}}disabled{{/unless}} />
+				<i class="fa-solid fa-lock"></i>
+			</label>
+			<label class="op2-info__toggle" data-tooltip="{{localize 'OP2.Poi.revealedHint'}}">
+				<input type="checkbox" name="system.infos.{{info.index}}.revealed" {{checked info.revealed}}
+					{{#unless ../isEditable}}disabled{{/unless}} />
+				<i class="fa-solid fa-eye"></i>
+			</label>
+			<button type="button" data-action="deleteRow" data-list="infos" data-index="{{info.index}}"
+				{{#unless ../isEditable}}disabled{{/unless}}><i class="fa-solid fa-trash"></i></button>
+		</div>
+		<textarea name="system.infos.{{info.index}}.text" rows="2"
+			placeholder="{{localize 'OP2.Poi.infoText'}}"
+			{{#unless ../isEditable}}disabled{{/unless}}>{{info.text}}</textarea>
+		{{#if info.locked}}
+		<input type="text" name="system.infos.{{info.index}}.condition" value="{{info.condition}}"
+			placeholder="{{localize 'OP2.Poi.condition'}}" {{#unless ../isEditable}}disabled{{/unless}} />
+		{{/if}}
+	</div>
+	{{else}}
+	<p class="op2-empty">{{localize "OP2.Poi.noInfo"}}</p>
+	{{/each}}
+</section>

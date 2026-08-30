@@ -83,7 +83,8 @@ export async function rollTest(actor, config = {}) {
 	let skillSteps = config.skillSteps ?? 0;
 	let extraDice = [...(config.extraDice ?? [])];
 	let bonus = config.bonus ?? 0;
-	let dt = config.dt ?? defaultDT();
+	// An explicit null means the test has no DT, as in `Examinar`.
+	let dt = "dt" in config ? config.dt : defaultDT();
 	let spendImpeto = config.spendImpeto === true;
 
 	if (config.configure !== false) {

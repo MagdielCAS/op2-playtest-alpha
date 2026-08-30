@@ -1,0 +1,26 @@
+<div class="op2-card op2-card--point">
+	<header class="op2-card__head">
+		{{#if system.mapNumber}}<span class="op2-card__number">{{system.mapNumber}}</span>{{/if}}
+		<span class="op2-card__title">{{item.name}}</span>
+		{{#if system.keyEvidence}}<span class="op2-card__tag">{{localize "OP2.Poi.keyEvidence"}}</span>{{/if}}
+	</header>
+
+	{{#if system.basicDescription}}
+	<div class="op2-card__description">{{{system.basicDescription}}}</div>
+	{{/if}}
+
+	{{#if hasAccess}}
+	<p class="op2-card__access">
+		<i class="fa-solid fa-lock"></i>
+		{{#each access as |route|}}<span class="op2-card__route">{{route.typeLabel}}{{#if route.label}} — {{route.label}}{{/if}}</span>{{/each}}
+	</p>
+	{{/if}}
+
+	<p class="op2-card__prompt">{{localize "OP2.Investigation.pickSkill"}}</p>
+	<div class="op2-card__buttons">
+		{{#each skills as |skill|}}
+		<button type="button" data-action="op2Investigate" data-item-uuid="{{../item.uuid}}"
+			data-skill="{{skill.key}}">{{skill.label}}</button>
+		{{/each}}
+	</div>
+</div>

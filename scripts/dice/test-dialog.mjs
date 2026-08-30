@@ -76,7 +76,7 @@ export async function promptTest({ title, attributeKey, attributeFaces, skillFac
 		</div>
 		<div class="form-group">
 			<label>${game.i18n.localize("OP2.Dialog.dt")}</label>
-			<div class="form-fields"><input type="number" name="dt" value="${dt}" step="1"></div>
+			<div class="form-fields"><input type="number" name="dt" value="${dt ?? ""}" step="1" placeholder="${game.i18n.localize("OP2.Dialog.noDt")}"></div>
 		</div>
 		${impetoField}
 	</div>`;
@@ -105,7 +105,8 @@ export async function promptTest({ title, attributeKey, attributeFaces, skillFac
 		skillSteps: Number(result.skillSteps) || 0,
 		extraDie: Number(result.extraDie) || 0,
 		bonus: Number(result.bonus) || 0,
-		dt: Number.isFinite(Number(result.dt)) ? Number(result.dt) : null,
+		// An empty field means the test has no DT, as in `Examinar`.
+		dt: String(result.dt ?? "").trim() === "" ? null : Number(result.dt),
 		spendImpeto: result.spendImpeto === true,
 	};
 }

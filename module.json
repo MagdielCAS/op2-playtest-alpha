@@ -26,12 +26,27 @@
 	"documentTypes": {
 		"Actor": {
 			"agent": {
-				"htmlFields": ["biography", "notes"]
+				"htmlFields": [
+					"biography",
+					"notes"
+				]
+			}
+		},
+		"Item": {
+			"pointOfInterest": {
+				"htmlFields": [
+					"basicDescription",
+					"contextual"
+				]
 			}
 		}
 	},
-	"esmodules": ["scripts/op2.mjs"],
-	"styles": ["styles/op2.css"],
+	"esmodules": [
+		"scripts/op2.mjs"
+	],
+	"styles": [
+		"styles/op2.css"
+	],
 	"languages": [
 		{
 			"lang": "en",

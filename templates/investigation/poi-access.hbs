@@ -1,0 +1,62 @@
+<section class="tab op2-poi__access {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+	<div class="op2-poi__toolbar">
+		<button type="button" data-action="addRow" data-list="access" {{#unless isEditable}}disabled{{/unless}}>
+			<i class="fa-solid fa-plus"></i> {{localize "OP2.Poi.addAccess"}}
+		</button>
+	</div>
+
+	{{#each accessRows as |route|}}
+	<div class="op2-access">
+		<div class="op2-access__head">
+			<select name="system.access.{{route.index}}.type" {{#unless ../isEditable}}disabled{{/unless}}>
+				{{selectOptions ../accessChoices selected=route.type localize=true}}
+			</select>
+			<input type="text" name="system.access.{{route.index}}.label" value="{{route.label}}"
+				placeholder="{{localize 'OP2.Poi.accessLabel'}}" {{#unless ../isEditable}}disabled{{/unless}} />
+			<label class="op2-access__flag">
+				<input type="checkbox" name="system.access.{{route.index}}.solved" {{checked route.solved}}
+					{{#unless ../isEditable}}disabled{{/unless}} />
+				{{localize "OP2.Poi.solved"}}
+			</label>
+			<button type="button" data-action="deleteRow" data-list="access" data-index="{{route.index}}"
+				{{#unless ../isEditable}}disabled{{/unless}}><i class="fa-solid fa-trash"></i></button>
+		</div>
+		<div class="op2-access__grid">
+			<label>DT<input type="number" name="system.access.{{route.index}}.dt" value="{{route.dt}}" step="1"
+				{{#unless ../isEditable}}disabled{{/unless}} /></label>
+			<label>{{localize "OP2.Poi.target"}}<input type="number" name="system.access.{{route.index}}.target"
+				value="{{route.target}}" step="1" {{#unless ../isEditable}}disabled{{/unless}} /></label>
+			<label>{{localize "OP2.Poi.password"}}<input type="text" name="system.access.{{route.index}}.password"
+				value="{{route.password}}" placeholder="4d6" {{#unless ../isEditable}}disabled{{/unless}} /></label>
+			<label>{{localize "OP2.Poi.maxAttempts"}}<input type="number"
+				name="system.access.{{route.index}}.maxAttempts" value="{{route.maxAttempts}}" step="1" min="0"
+				{{#unless ../isEditable}}disabled{{/unless}} /></label>
+		</div>
+		<textarea name="system.access.{{route.index}}.notes" rows="2"
+			placeholder="{{localize 'OP2.Poi.accessNotes'}}"
+			{{#unless ../isEditable}}disabled{{/unless}}>{{route.notes}}</textarea>
+	</div>
+	{{else}}
+	<p class="op2-empty">{{localize "OP2.Poi.noAccess"}}</p>
+	{{/each}}
+
+	<h3>{{localize "OP2.Poi.trigger"}}</h3>
+	<div class="op2-access__grid">
+		<label>{{localize "OP2.Field.skill"}}
+			<select name="system.trigger.skill" {{#unless isEditable}}disabled{{/unless}}>
+				{{selectOptions skillChoices selected=system.trigger.skill localize=true}}
+			</select>
+		</label>
+		<label>DT<input type="number" name="system.trigger.dt" value="{{system.trigger.dt}}" step="1"
+			{{#unless isEditable}}disabled{{/unless}} /></label>
+		<label>{{localize "OP2.Poi.cost"}}
+			<select name="system.trigger.resource" {{#unless isEditable}}disabled{{/unless}}>
+				{{selectOptions resourceChoices selected=system.trigger.resource localize=true}}
+			</select>
+		</label>
+		<label>{{localize "OP2.Poi.amount"}}<input type="number" name="system.trigger.amount"
+			value="{{system.trigger.amount}}" step="1" min="0" {{#unless isEditable}}disabled{{/unless}} /></label>
+	</div>
+	<textarea name="system.trigger.text" rows="2" placeholder="{{localize 'OP2.Poi.triggerText'}}"
+		{{#unless isEditable}}disabled{{/unless}}>{{system.trigger.text}}</textarea>
+</section>

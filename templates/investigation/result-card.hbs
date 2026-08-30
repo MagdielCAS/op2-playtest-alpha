@@ -1,0 +1,28 @@
+<div class="op2-card op2-card--result">
+	<header class="op2-card__head">
+		<span class="op2-card__title">{{item.name}}</span>
+		<span class="op2-card__mode">{{#if canExamine}}{{localize "OP2.Investigation.investigate"}}{{else}}{{localize "OP2.Investigation.examine"}}{{/if}}</span>
+		<span class="op2-card__skill">{{skillLabel}} · {{measure}}</span>
+	</header>
+
+	{{#if found.length}}
+	<ul class="op2-card__found">
+		{{#each found as |info|}}
+		<li><span class="op2-card__dt">DT {{info.dt}}</span> {{info.text}}</li>
+		{{/each}}
+	</ul>
+	{{else}}
+	<p class="op2-card__nothing">{{localize "OP2.Investigation.nothingNew"}}</p>
+	{{/if}}
+
+	{{#if critical}}<p class="op2-card__critical">{{localize "OP2.Investigation.criticalBonus"}}</p>{{/if}}
+	{{#if cost}}<p class="op2-card__cost">{{cost}}</p>{{/if}}
+
+	{{#if canExamine}}
+	<div class="op2-card__buttons">
+		<button type="button" data-action="op2Examine" data-item-uuid="{{item.uuid}}" data-skill="{{skillKey}}">
+			{{localize "OP2.Investigation.examineWith"}}
+		</button>
+	</div>
+	{{/if}}
+</div>

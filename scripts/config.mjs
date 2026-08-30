@@ -5,6 +5,7 @@
 
 export const MODULE_ID = "op2-playtest-alpha";
 export const AGENT_TYPE = `${MODULE_ID}.agent`;
+export const POI_TYPE = `${MODULE_ID}.pointOfInterest`;
 
 /** Die sizes, from the smallest to the largest. The last entry is paranormal only. */
 export const DIE_LADDER = [4, 6, 8, 10, 12, 20];
@@ -15,6 +16,7 @@ export const STANDARD_MAX_INDEX = 4;
 export const OP2 = {
 	moduleId: MODULE_ID,
 	agentType: AGENT_TYPE,
+	poiType: POI_TYPE,
 
 	dieLadder: DIE_LADDER,
 	standardMaxIndex: STANDARD_MAX_INDEX,
@@ -98,6 +100,19 @@ export const OP2 = {
 		/** Boxes spent for one step on an attribute until the end of the scene. */
 		attributeCost: 3,
 	},
+
+	/** Routes that open an access challenge. */
+	accessTypes: {
+		destrancar: "OP2.Access.destrancar",
+		arrombar: "OP2.Access.arrombar",
+		alcancar: "OP2.Access.alcancar",
+		hackTecnico: "OP2.Access.hackTecnico",
+		hackSocial: "OP2.Access.hackSocial",
+		item: "OP2.Access.item",
+	},
+
+	/** Cost of an `Examinar` that reveals nothing new. */
+	examineCost: { resource: "pd", amount: 1 },
 
 	/**
 	 * `Ajuda`: step increases given to the test of another character, by the die

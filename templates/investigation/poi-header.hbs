@@ -1,0 +1,21 @@
+<header class="op2-poi__header">
+	<img class="op2-poi__img" src="{{document.img}}" alt="{{document.name}}" />
+	<div class="op2-poi__fields">
+		<input class="op2-poi__name" type="text" name="name" value="{{document.name}}"
+			placeholder="{{localize 'OP2.Poi.name'}}" {{#unless isEditable}}disabled{{/unless}} />
+		<div class="op2-poi__row">
+			<label class="op2-poi__number">{{localize "OP2.Poi.mapNumber"}}
+				<input type="text" name="system.mapNumber" value="{{system.mapNumber}}"
+					{{#unless isEditable}}disabled{{/unless}} />
+			</label>
+			<label class="op2-poi__flag">
+				<input type="checkbox" name="system.keyEvidence" {{checked system.keyEvidence}}
+					{{#unless isEditable}}disabled{{/unless}} />
+				{{localize "OP2.Poi.keyEvidence"}}
+			</label>
+			<button type="button" data-action="postToChat">
+				<i class="fa-solid fa-comment"></i> {{localize "OP2.Poi.postToChat"}}
+			</button>
+		</div>
+	</div>
+</header>

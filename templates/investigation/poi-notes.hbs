@@ -1,0 +1,30 @@
+<section class="tab op2-poi__notes {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+	<h3>{{localize "OP2.Poi.basicDescription"}}</h3>
+	<p class="hint">{{localize "OP2.Poi.basicHint"}}</p>
+	{{formInput systemFields.basicDescription value=system.basicDescription enriched=enrichedBasic
+		name="system.basicDescription" toggled=true disabled=disabled}}
+
+	<h3>{{localize "OP2.Poi.contextual"}}</h3>
+	<p class="hint">{{localize "OP2.Poi.contextualHint"}}</p>
+	{{formInput systemFields.contextual value=system.contextual enriched=enrichedContextual
+		name="system.contextual" toggled=true disabled=disabled}}
+
+	<h3>{{localize "OP2.Poi.tools"}}</h3>
+	<div class="op2-poi__toolbar">
+		<button type="button" data-action="addRow" data-list="tools" {{#unless isEditable}}disabled{{/unless}}>
+			<i class="fa-solid fa-plus"></i> {{localize "OP2.Poi.addTool"}}
+		</button>
+	</div>
+	{{#each toolRows as |tool|}}
+	<div class="op2-tool">
+		<div class="op2-tool__head">
+			<input type="text" name="system.tools.{{tool.index}}.name" value="{{tool.name}}"
+				placeholder="{{localize 'OP2.Poi.toolName'}}" {{#unless ../isEditable}}disabled{{/unless}} />
+			<button type="button" data-action="deleteRow" data-list="tools" data-index="{{tool.index}}"
+				{{#unless ../isEditable}}disabled{{/unless}}><i class="fa-solid fa-trash"></i></button>
+		</div>
+		<textarea name="system.tools.{{tool.index}}.text" rows="2"
+			{{#unless ../isEditable}}disabled{{/unless}}>{{tool.text}}</textarea>
+	</div>
+	{{/each}}
+</section>
