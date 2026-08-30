@@ -47,6 +47,12 @@ export class OP2AgentData extends foundry.abstract.TypeDataModel {
 				max: new fields.NumberField({ required: true, integer: true, min: 0, initial: 3 }),
 			}),
 
+			/** Tests already made at 0 PV or 0 PD, which raise the next DT. */
+			survival: new fields.SchemaField({
+				injuryTests: new fields.NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+				traumaTests: new fields.NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+			}),
+
 			attributes: new fields.SchemaField({
 				physical: dieField(6),
 				mind: dieField(6),

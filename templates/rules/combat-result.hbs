@@ -1,0 +1,13 @@
+<div class="op2-card op2-card--combat">
+	<header class="op2-card__head">
+		<span class="op2-card__title">{{localize "OP2.Combat.resultTitle"}}</span>
+		<span class="op2-card__skill">{{attackerName}} {{attackerTotal}} · {{defenderName}} {{defenderTotal}}</span>
+	</header>
+	<p class="op2-card__ok">{{outcome}}</p>
+	{{#if dodging}}<p class="op2-card__progress">{{localize "OP2.Combat.dodged"}}</p>{{/if}}
+	{{#if damage}}
+	<p class="op2-card__cost">{{localize "OP2.Combat.dealt"}} <strong>{{damage}}</strong> PV — {{hurtName}}</p>
+	{{else}}
+	<p class="op2-card__nothing">{{localize "OP2.Combat.noDamage"}}</p>
+	{{/if}}
+</div>

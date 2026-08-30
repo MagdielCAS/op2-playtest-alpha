@@ -1,0 +1,20 @@
+<div class="op2-card op2-card--combat">
+	<header class="op2-card__head">
+		<span class="op2-card__title">{{localize "OP2.Combat.attackTitle"}}</span>
+		<span class="op2-card__mode">{{attackerName}}</span>
+		<span class="op2-card__skill">
+			{{#if armed}}{{localize "OP2.Combat.armed"}}{{else}}{{localize "OP2.Combat.unarmed"}}{{/if}}
+		</span>
+	</header>
+	<p class="op2-card__progress">
+		{{localize "OP2.Combat.total"}} <strong>{{total}}</strong> ·
+		{{localize "OP2.Chat.highLow" high=highest low=lowest}}
+	</p>
+	<p class="op2-card__prompt">{{localize "OP2.Combat.awaiting"}}</p>
+	<div class="op2-card__buttons">
+		<button type="button" data-action="op2Defend" data-attacker-uuid="{{attackerUuid}}"
+			data-total="{{total}}" data-damage="{{damage}}">
+			{{localize "OP2.Combat.respond"}}
+		</button>
+	</div>
+</div>

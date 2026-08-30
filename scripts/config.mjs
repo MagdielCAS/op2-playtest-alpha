@@ -112,6 +112,53 @@ export const OP2 = {
 		item: "OP2.Access.item",
 	},
 
+	/** `Ferimentos` and `Traumas`: the DT rises by `step` for every test already made. */
+	survival: {
+		injury: { skill: "vigor", resource: "pv", dt: 7, step: 3 },
+		trauma: { skill: "discipline", resource: "pd", dt: 7, step: 3 },
+	},
+
+	/** Simplified combat: the winner deals RA armed, or RB unarmed. */
+	combat: {
+		attackSkill: "fighting",
+		dodgeSkill: "acrobatics",
+		/** The character who only defends adds this die to the test. */
+		dodgeBonusDie: 6,
+	},
+
+	/** `Recapitular` and `Compartilhar`: one success each per scene. */
+	sceneActions: {
+		recap: { skill: "intuition", dt: 10 },
+		share: { skill: "research", dt: 10 },
+	},
+
+	/**
+	 * `Sobrecarga mental`: emotional damage at the end of each round of an
+	 * investigation scene. The list is the progression of the basement of
+	 * `A Maldição do Ídolo de Pedra`; the last entry repeats from then on.
+	 */
+	overload: ["0", "0", "1", "1", "1d4", "1d4", "1d6", "1d6", "2d4"],
+
+	/** Ordo Realitas tools the module resolves on its own. */
+	tools: {
+		/**
+		 * `Laboratório Portátil`: roll the dice one at a time, starting at d4 and
+		 * stepping up, capped at the die of Aptidão (Exatas). Each roll must be
+		 * equal to or higher than the one before. Rerolls equal half of Mente.
+		 */
+		lab: { skill: "aptExactSciences", attribute: "mind", minDice: 4, maxDice: 6 },
+		/** `Rádio Modificado`: a Tecnologia test removes false word sets. */
+		radio: {
+			skill: "technology",
+			table: [
+				{ min: 13, removed: null },
+				{ min: 10, removed: 3 },
+				{ min: 7, removed: 2 },
+				{ min: 0, removed: 0 },
+			],
+		},
+	},
+
 	/** Access routes the module resolves on its own. The rest is GM narration. */
 	interactiveAccess: ["destrancar", "arrombar", "alcancar", "sustentar"],
 

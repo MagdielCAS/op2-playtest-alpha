@@ -66,6 +66,9 @@ jobs:
       - name: Validate the source tree
         run: node .github/scripts/validate-manifest.mjs .
 
+      - name: Run the rule tests
+        run: node .github/scripts/test-rules.mjs
+
       # Only the files the module needs at runtime. Every entry must exist:
       # `zip` merely warns on a missing path, so the list is checked first.
       - name: Create the module archive

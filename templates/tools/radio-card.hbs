@@ -1,0 +1,13 @@
+<div class="op2-card op2-card--tool">
+	<header class="op2-card__head">
+		<span class="op2-card__title">{{localize "OP2.Tool.radio"}}</span>
+		<span class="op2-card__skill">{{localize "OP2.Combat.total"}} {{total}}</span>
+	</header>
+	{{#if all}}
+	<p class="op2-card__ok">{{localize "OP2.Tool.radioAll"}}</p>
+	{{else if none}}
+	<p class="op2-card__nothing">{{localize "OP2.Tool.radioNone"}}</p>
+	{{else}}
+	<p class="op2-card__progress">{{localize "OP2.Tool.radioRemoved"}} <strong>{{removed}}</strong></p>
+	{{/if}}
+</div>

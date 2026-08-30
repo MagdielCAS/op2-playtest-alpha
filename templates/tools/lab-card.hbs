@@ -1,0 +1,20 @@
+<div class="op2-card op2-card--tool">
+	<header class="op2-card__head">
+		<span class="op2-card__title">{{localize "OP2.Tool.lab"}}</span>
+		<span class="op2-card__skill">{{localize "OP2.Tool.cappedAt"}} {{capLabel}}</span>
+	</header>
+	<div class="op2-lab__sequence">
+		{{#each sequence as |die|}}
+		<span class="op2-lab__die{{#if die.broken}} is-broken{{/if}}">
+			<span class="op2-lab__result">{{die.result}}</span>
+			<span class="op2-lab__faces">d{{die.faces}}</span>
+		</span>
+		{{/each}}
+	</div>
+	{{#if success}}
+	<p class="op2-card__ok">{{localize "OP2.Tool.labSuccess"}}</p>
+	{{else}}
+	<p class="op2-card__cost">{{localize "OP2.Tool.labBroken" position=brokeAt}}</p>
+	{{/if}}
+	<p class="op2-card__progress">{{localize "OP2.Tool.rerolls"}} <strong>{{rerolls}}</strong></p>
+</div>

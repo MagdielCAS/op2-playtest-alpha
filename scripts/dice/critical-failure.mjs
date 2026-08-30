@@ -1,4 +1,5 @@
 import { MODULE_ID, OP2 } from "../config.mjs";
+import { applyDamage } from "../rules/survival.mjs";
 
 /**
  * Roll on the `Efeitos de falhas críticas` table and apply what the module can
@@ -7,11 +8,6 @@ import { MODULE_ID, OP2 } from "../config.mjs";
  * @returns {Promise<ChatMessage|null>}  The message posted, or null when refused.
  */
 export async function rollCriticalFailure(actor) {
-	if (!actor?.isOwner) {
-		ui.notifications.warn(game.i18n.localize("OP2.Notification.notOwner"));
-		return null;
-	}
-
 	const roll = await new Roll("1d8").evaluate();
 	const entry = OP2.criticalFailureTable.find((e) => e.face === roll.total) ?? OP2.criticalFailureTable.at(-1);
 	const rolls = [roll];
@@ -25,8 +21,7 @@ export async function rollCriticalFailure(actor) {
 	} else if (entry.effect === "resource") {
 		const damage = await new Roll(entry.formula).evaluate();
 		rolls.push(damage);
-		const current = actor.system[entry.resource].value;
-		await actor.update({ [`system.${entry.resource}.value`]: Math.max(0, current - damage.total) });
+		await applyDamage(actor, entry.resource, damage.total);
 		outcome = game.i18n.format("OP2.CriticalFailure.appliedResource", {
 			amount: damage.total,
 			resource: game.i18n.localize(`OP2.Field.${entry.resource}`),
@@ -77,47 +72,4 @@ async function applyAttributeStep(actor, attributeKey) {
 		},
 	]);
 	return effect;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Bind the `roll the table` button of a critical failure card. The listener sits
- * on `document.body`, so it survives every chat layout and a hot reload.
- */
-export function registerCriticalFailureListener() {
-	const marker = "_op2CriticalFailureListener";
-	if (document.body[marker]) return;
-
-	const handler = async (event) => {
-		const button = event.target.closest("[data-action='op2CriticalFailure']");
-		if (!button) return;
-		event.preventDefault();
-
-		const actor = await fromUuid(button.dataset.actorUuid);
-		if (!actor) return;
-
-		button.disabled = true;
-		const message = await rollCriticalFailure(actor);
-		if (!message) {
-			button.disabled = false;
-			return;
-		}
-
-		const messageId = button.closest("[data-message-id]")?.dataset.messageId;
-		const source = game.messages.get(messageId);
-		if (source?.isOwner) await source.setFlag(MODULE_ID, "criticalFailureResolved", true);
-		else button.remove();
-	};
-
-	document.body[marker] = handler;
-	document.body.addEventListener("click", handler);
-}
-
-/* -------------------------------------------- */
-
-/** Hide the button once the table has been rolled for that message. */
-export function hideResolvedCriticalFailureButton(message, element) {
-	if (!message.getFlag(MODULE_ID, "criticalFailureResolved")) return;
-	element.querySelector("[data-action='op2CriticalFailure']")?.remove();
 }

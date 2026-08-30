@@ -2,35 +2,67 @@
  * Ordem Paranormal 2 — Playtest Alpha
  * An overlay module for the `ordemparanormal` system on Foundry VTT v14.
  *
- * The module owns its own Actor sub-type, its own data model, its own sheet and
- * its own Roll class. It never replaces a class of the base system.
+ * The module owns its own Actor sub-type, its own Item sub-type, its own data
+ * models, its own sheets and its own Roll class. It never replaces a class of
+ * the base system.
  */
 
 import { MODULE_ID, AGENT_TYPE, POI_TYPE, OP2 } from "./config.mjs";
 import { registerSettings } from "./settings.mjs";
-import { OP2AgentData } from "./data/agent-data.mjs";
+
 import OP2Roll from "./dice/op2-roll.mjs";
 import { rollTest, buildFlavor } from "./dice/test-workflow.mjs";
-import { stepDie, dieLabel, dieIndex, helpSteps } from "./dice/die-step.mjs";
-import {
-	rollCriticalFailure,
-	registerCriticalFailureListener,
-	hideResolvedCriticalFailureButton,
-} from "./dice/critical-failure.mjs";
 import { evaluateTest } from "./dice/evaluate-test.mjs";
+import { stepDie, dieLabel, dieIndex, helpSteps } from "./dice/die-step.mjs";
+import { rollCriticalFailure } from "./dice/critical-failure.mjs";
+
+import { OP2AgentData } from "./data/agent-data.mjs";
 import { OP2AgentSheet } from "./sheets/agent-sheet.mjs";
 import { OP2PointOfInterestData } from "./data/point-of-interest-data.mjs";
 import { OP2PointOfInterestSheet } from "./sheets/point-of-interest-sheet.mjs";
-import {
-	postPointOfInterest,
-	investigate,
-	examine,
-	resolveActor,
-	registerInvestigationListener,
-} from "./investigation/actions.mjs";
+
+import { postPointOfInterest, investigate, examine, resolveActor } from "./investigation/actions.mjs";
 import { attemptAccess } from "./investigation/access.mjs";
 import { registerInvestigationHandlers } from "./investigation/handlers.mjs";
-import { registerSocket } from "./socket.mjs";
+
+import { applyDamage, rollSurvival } from "./rules/survival.mjs";
+import { attack, handleCombatResolve, resolveOpposed } from "./rules/combat.mjs";
+import { offerHelp } from "./rules/help.mjs";
+import { endRound, overloadFormula } from "./rules/overload.mjs";
+import { endScene, sceneAction } from "./rules/scene.mjs";
+import { runLab } from "./tools/lab.mjs";
+import { runRadio } from "./tools/radio.mjs";
+
+import { registerCardActions, hideSpentButtons } from "./card-actions.mjs";
+import { registerChatCommands, COMMANDS } from "./chat-commands.mjs";
+import { registerHandler, registerSocket } from "./socket.mjs";
+
+/** Every Handlebars template the module renders or uses as a partial. */
+const TEMPLATES = [
+	"actor/header",
+	"actor/main",
+	"actor/abilities",
+	"actor/biography",
+	"investigation/poi-header",
+	"investigation/poi-infos",
+	"investigation/poi-access",
+	"investigation/poi-notes",
+	"investigation/point-card",
+	"investigation/result-card",
+	"investigation/access-card",
+	"investigation/unlock-card",
+	"investigation/route-button",
+	"rules/survival-prompt",
+	"rules/survival-result",
+	"rules/attack-card",
+	"rules/combat-result",
+	"rules/help-card",
+	"rules/overload-card",
+	"rules/scene-card",
+	"rules/scene-action-card",
+	"tools/lab-card",
+	"tools/radio-card",
+];
 
 /** Add the OP2 Roll class without dropping the classes of the base system. */
 function registerRollClass() {
@@ -58,22 +90,12 @@ Hooks.once("init", () => {
 
 	registerSettings();
 	registerInvestigationHandlers();
+	registerHandler("combatResolve", handleCombatResolve);
+	registerChatCommands();
 
-	foundry.applications.handlebars.loadTemplates([
-		`modules/${MODULE_ID}/templates/actor/header.hbs`,
-		`modules/${MODULE_ID}/templates/actor/main.hbs`,
-		`modules/${MODULE_ID}/templates/actor/abilities.hbs`,
-		`modules/${MODULE_ID}/templates/actor/biography.hbs`,
-		`modules/${MODULE_ID}/templates/investigation/poi-header.hbs`,
-		`modules/${MODULE_ID}/templates/investigation/poi-infos.hbs`,
-		`modules/${MODULE_ID}/templates/investigation/poi-access.hbs`,
-		`modules/${MODULE_ID}/templates/investigation/poi-notes.hbs`,
-		`modules/${MODULE_ID}/templates/investigation/point-card.hbs`,
-		`modules/${MODULE_ID}/templates/investigation/result-card.hbs`,
-		`modules/${MODULE_ID}/templates/investigation/access-card.hbs`,
-		`modules/${MODULE_ID}/templates/investigation/unlock-card.hbs`,
-		`modules/${MODULE_ID}/templates/investigation/route-button.hbs`,
-	]);
+	foundry.applications.handlebars.loadTemplates(
+		TEMPLATES.map((name) => `modules/${MODULE_ID}/templates/${name}.hbs`)
+	);
 
 	const module = game.modules.get(MODULE_ID);
 	if (module) {
@@ -84,19 +106,35 @@ Hooks.once("init", () => {
 			OP2AgentSheet,
 			OP2PointOfInterestData,
 			OP2PointOfInterestSheet,
+			COMMANDS,
+			// Dice
 			rollTest,
 			buildFlavor,
 			evaluateTest,
 			rollCriticalFailure,
+			stepDie,
+			dieLabel,
+			dieIndex,
+			helpSteps,
+			// Investigation
 			postPointOfInterest,
 			investigate,
 			examine,
 			attemptAccess,
 			resolveActor,
-			stepDie,
-			dieLabel,
-			dieIndex,
-			helpSteps,
+			// Rules
+			applyDamage,
+			rollSurvival,
+			attack,
+			resolveOpposed,
+			offerHelp,
+			endRound,
+			overloadFormula,
+			endScene,
+			sceneAction,
+			// Tools
+			runLab,
+			runRadio,
 		};
 	}
 
@@ -109,11 +147,10 @@ Hooks.once("setup", () => {
 	registerRollClass();
 });
 
-Hooks.on("renderChatMessageHTML", (message, element) => hideResolvedCriticalFailureButton(message, element));
+Hooks.on("renderChatMessageHTML", (message, element) => hideSpentButtons(message, element));
 
 Hooks.once("ready", () => {
-	registerCriticalFailureListener();
-	registerInvestigationListener();
+	registerCardActions();
 	registerSocket();
 
 	if (game.system.id !== "ordemparanormal") {

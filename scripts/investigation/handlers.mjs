@@ -3,6 +3,7 @@ import { registerHandler } from "../socket.mjs";
 import { resolveSkills, selectPending } from "./reveal.mjs";
 import { resolveForceOpen, resolveReach, resolveSustain, sustainSteps } from "./access-rules.mjs";
 import { compareGuess, resolveGuess, attemptsPerRound } from "./unlock.mjs";
+import { applyDamage } from "../rules/survival.mjs";
 
 /**
  * Everything that reads or writes a point of interest. These run on a GM client
@@ -20,11 +21,9 @@ async function post(actor, content) {
 	return ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
 }
 
-/** Subtract a resource from a character. The GM may write any actor. */
+/** Subtract a resource. `applyDamage` also fires the survival test at zero. */
 async function spend(actor, resource, amount) {
-	if (!amount) return;
-	const current = actor.system[resource].value;
-	await actor.update({ [`system.${resource}.value`]: Math.max(0, current - amount) });
+	return applyDamage(actor, resource, amount);
 }
 
 /** Fetch the actor and the point of interest of a request. */

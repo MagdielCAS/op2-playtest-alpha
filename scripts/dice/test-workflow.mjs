@@ -3,6 +3,7 @@ import { paranormalAllowed, defaultDT, autoImpeto } from "../settings.mjs";
 import { stepDie, dieLabel } from "./die-step.mjs";
 import OP2Roll from "./op2-roll.mjs";
 import { promptTest } from "./test-dialog.mjs";
+import { consumeHelp } from "../rules/help.mjs";
 
 /**
  * Build the chat flavor of a test: what was rolled, and how it ended.
@@ -113,6 +114,9 @@ export async function rollTest(actor, config = {}) {
 	// One box of Ímpeto buys one step on the test.
 	spendImpeto = spendImpeto && system.hasImpeto && system.impeto.value >= OP2.impeto.stepCost;
 	if (spendImpeto) skillSteps += 1;
+
+	// `Ajuda` offered by another character raises this test, once.
+	skillSteps += await consumeHelp(actor);
 
 	const allowParanormal = paranormalAllowed();
 	const attributeFaces = stepDie(system.attributes[attributeKey].faces, attributeSteps, { allowParanormal });

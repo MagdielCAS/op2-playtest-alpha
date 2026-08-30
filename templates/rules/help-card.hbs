@@ -1,0 +1,14 @@
+<div class="op2-card op2-card--help">
+	<header class="op2-card__head">
+		<span class="op2-card__title">{{localize "OP2.Help.title"}}</span>
+		<span class="op2-card__mode">{{helperName}}</span>
+		<span class="op2-card__skill">{{skillLabel}}</span>
+	</header>
+	<p class="op2-card__progress">{{localize "OP2.Help.grants"}} <strong>+{{steps}}</strong>
+		{{localize "OP2.Help.steps"}}</p>
+	<div class="op2-card__buttons">
+		<button type="button" data-action="op2AcceptHelp" data-steps="{{steps}}" data-helper-name="{{helperName}}">
+			{{localize "OP2.Help.accept"}}
+		</button>
+	</div>
+</div>

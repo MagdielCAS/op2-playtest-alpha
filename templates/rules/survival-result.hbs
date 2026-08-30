@@ -1,0 +1,12 @@
+<div class="op2-card op2-card--survival">
+	<header class="op2-card__head">
+		<span class="op2-card__title">{{title}}</span>
+		<span class="op2-card__skill">DT {{dt}}</span>
+	</header>
+	{{#if survived}}
+	<p class="op2-card__ok">{{outcome}}</p>
+	<p class="op2-card__progress">{{localize "OP2.Survival.nextDT"}} <strong>{{nextDT}}</strong></p>
+	{{else}}
+	<p class="op2-card__cost op2-card__solved">{{outcome}}</p>
+	{{/if}}
+</div>

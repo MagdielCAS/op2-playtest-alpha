@@ -45,3 +45,6 @@ jobs:
       # placeholder check passes only when the committed manifest is complete.
       - name: Validate the manifest, the language files and the i18n keys
         run: node .github/scripts/validate-manifest.mjs .
+
+      - name: Run the rule tests
+        run: node .github/scripts/test-rules.mjs

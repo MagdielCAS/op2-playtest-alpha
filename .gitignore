@@ -1,0 +1,11 @@
+# Node
+node_modules/
+
+# Saída de build
+module.zip
+verify/
+
+# Editor e sistema operacional
+.DS_Store
+.idea/
+*.swp

@@ -1,6 +1,5 @@
 import { MODULE_ID, OP2 } from "../config.mjs";
 import { request } from "../socket.mjs";
-import { attemptAccess } from "./access.mjs";
 import { buildRouteButton } from "./handlers.mjs";
 
 /**
@@ -86,39 +85,4 @@ export async function examine(actor, itemUuid, skillKey) {
 		total: roll.total,
 		critical: roll.evaluation?.criticalSuccess ?? false,
 	});
-}
-
-/* -------------------------------------------- */
-
-/**
- * Bind the buttons of the investigation cards. One delegated listener on
- * `document.body` covers every chat layout and survives a hot reload.
- */
-export function registerInvestigationListener() {
-	const marker = "_op2InvestigationListener";
-	if (document.body[marker]) return;
-
-	const handler = async (event) => {
-		const button = event.target.closest(
-			"[data-action='op2Investigate'], [data-action='op2Examine'], [data-action='op2Access']"
-		);
-		if (!button) return;
-		event.preventDefault();
-
-		const actor = resolveActor();
-		if (!actor) return ui.notifications.warn(game.i18n.localize("OP2.Notification.noActor"));
-
-		const { action, skill, itemUuid } = button.dataset;
-		button.disabled = true;
-		try {
-			if (action === "op2Investigate") await investigate(actor, itemUuid, skill);
-			else if (action === "op2Examine") await examine(actor, itemUuid, skill);
-			else await attemptAccess(actor, { ...button.dataset });
-		} finally {
-			button.disabled = false;
-		}
-	};
-
-	document.body[marker] = handler;
-	document.body.addEventListener("click", handler);
 }
