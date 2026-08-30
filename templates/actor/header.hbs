@@ -37,6 +37,7 @@
 					<input type="number" name="system.pd.max" value="{{system.pd.max}}" step="1" />
 				</span>
 			</label>
+			{{#if hasImpeto}}
 			<div class="op2-resource op2-impeto" data-tooltip="{{localize 'OP2.Field.impetoHint'}}">
 				<span class="op2-impeto__label">{{localize "OP2.Field.impeto"}}</span>
 				<span class="op2-impeto__track">
@@ -47,6 +48,7 @@
 					{{/each}}
 				</span>
 			</div>
+			{{/if}}
 		</div>
 	</div>
 </header>

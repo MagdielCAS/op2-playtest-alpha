@@ -125,6 +125,53 @@ export class OP2AgentData extends foundry.abstract.TypeDataModel {
 	/* -------------------------------------------- */
 
 	/**
+	 * True when this character has the Ímpeto track of the Executor profile.
+	 * @returns {boolean}
+	 */
+	get hasImpeto() {
+		return this.profile === OP2.impeto.profile;
+	}
+
+	/* -------------------------------------------- */
+
+	/**
+	 * Spend boxes of the Ímpeto track to raise one attribute by one step.
+	 * The effect has no duration in Foundry, so the GM removes it at the end of
+	 * the scene.
+	 * @param {string} attributeKey  Attribute to raise.
+	 * @returns {Promise<ActiveEffect|null>}  Null when there are not enough boxes.
+	 */
+	async spendImpetoOnAttribute(attributeKey) {
+		if (!this.hasImpeto) return null;
+		if (!OP2.attributes[attributeKey]) throw new Error(`Unknown OP2 attribute: ${attributeKey}`);
+		if (this.impeto.value < OP2.impeto.attributeCost) return null;
+
+		const actor = this.parent;
+		await actor.update({ "system.impeto.value": this.impeto.value - OP2.impeto.attributeCost });
+
+		const [effect] = await actor.createEmbeddedDocuments("ActiveEffect", [
+			{
+				name: game.i18n.format("OP2.Effect.impetoAttribute", {
+					attribute: game.i18n.localize(OP2.attributes[attributeKey].label),
+				}),
+				img: "icons/magic/control/buff-strength-muscle-damage-red.webp",
+				origin: actor.uuid,
+				changes: [
+					{
+						key: `system.attributes.${attributeKey}.step`,
+						mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+						value: "1",
+					},
+				],
+				flags: { [OP2.moduleId]: { source: "impeto" } },
+			},
+		]);
+		return effect ?? null;
+	}
+
+	/* -------------------------------------------- */
+
+	/**
 	 * How many `Destrancar` attempts this character makes per round.
 	 * @returns {number}
 	 */

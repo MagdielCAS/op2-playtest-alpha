@@ -1,4 +1,6 @@
-import { DIE_LADDER, STANDARD_MAX_INDEX } from "../config.mjs";
+import { DIE_LADDER, STANDARD_MAX_INDEX, OP2 } from "../config.mjs";
+
+const HELP_STEPS = OP2.help;
 
 /**
  * Position of a die size on the ladder. An unknown size falls back to the
@@ -44,4 +46,15 @@ export function stepDie(faces, steps = 0, { allowParanormal = false } = {}) {
  */
 export function dieLabel(faces) {
 	return `d${Number(faces) || 4}`;
+}
+
+/**
+ * Step increases the `Ajuda` action gives, by the die of the helping skill.
+ * A d4 gives no help, a d6 or a d8 gives one step, a d10 or a d12 gives two.
+ * @param {number} faces  Die of the skill used to help.
+ * @returns {number}      Steps added to the test of the other character.
+ */
+export function helpSteps(faces) {
+	const normalized = DIE_LADDER[dieIndex(faces)];
+	return HELP_STEPS[normalized] ?? 0;
 }

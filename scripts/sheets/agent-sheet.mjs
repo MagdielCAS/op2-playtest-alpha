@@ -19,6 +19,7 @@ export class OP2AgentSheet extends api.HandlebarsApplicationMixin(sheets.ActorSh
 			editImage: OP2AgentSheet.#onEditImage,
 			rollSkill: OP2AgentSheet.#onRollSkill,
 			setImpeto: OP2AgentSheet.#onSetImpeto,
+			spendImpetoAttribute: OP2AgentSheet.#onSpendImpetoAttribute,
 			addAbility: OP2AgentSheet.#onAddAbility,
 			deleteAbility: OP2AgentSheet.#onDeleteAbility,
 		},
@@ -62,6 +63,8 @@ export class OP2AgentSheet extends api.HandlebarsApplicationMixin(sheets.ActorSh
 		context.disabled = !this.isEditable;
 		context.systemFields = system.schema.fields;
 
+		context.hasImpeto = system.hasImpeto;
+		context.canSpendImpetoAttribute = system.hasImpeto && system.impeto.value >= OP2.impeto.attributeCost;
 		context.impetoBoxes = Array.fromRange(system.impeto.max).map((index) => ({
 			index,
 			label: String(index + 1),
@@ -79,6 +82,7 @@ export class OP2AgentSheet extends api.HandlebarsApplicationMixin(sheets.ActorSh
 			path: `system.skills.${key}`,
 			group: config.group ?? null,
 			attributeLabel: game.i18n.localize(OP2.attributes[config.attribute].label),
+			attributeDieLabel: system.attributes[config.attribute].dieLabel,
 			...system.skills[key],
 		}));
 
@@ -164,6 +168,14 @@ export class OP2AgentSheet extends api.HandlebarsApplicationMixin(sheets.ActorSh
 		const current = this.actor.system.impeto.value;
 		const next = current === index + 1 ? index : index + 1;
 		return this.actor.update({ "system.impeto.value": next });
+	}
+
+	/** Spend three boxes of Ímpeto to raise one attribute by one step. */
+	static async #onSpendImpetoAttribute(_event, target) {
+		if (!this.isEditable) return;
+		const attributeKey = target.dataset.attribute;
+		const effect = await this.actor.system.spendImpetoOnAttribute(attributeKey);
+		if (!effect) ui.notifications.warn(game.i18n.localize("OP2.Notification.notEnoughImpeto"));
 	}
 
 	/** Append an empty ability. */

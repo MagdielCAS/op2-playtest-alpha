@@ -11,6 +11,7 @@ const { DialogV2 } = foundry.applications.api;
  * @property {number} extraDie       Size of an extra die, or 0 for none.
  * @property {number} bonus          Flat bonus added to the sum.
  * @property {number|null} dt        Difficulty of the test.
+ * @property {boolean} spendImpeto   Spend one box of Ímpeto for one step.
  */
 
 /**
@@ -21,9 +22,10 @@ const { DialogV2 } = foundry.applications.api;
  * @param {Record<string, number>} config.attributeFaces  Current die of each attribute.
  * @param {number} config.skillFaces            Current die of the skill.
  * @param {number} config.dt                    Difficulty proposed.
+ * @param {number} [config.impeto=0]            Boxes filled on the Ímpeto track.
  * @returns {Promise<OP2TestOptions|null>}      Null when the player cancels.
  */
-export async function promptTest({ title, attributeKey, attributeFaces, skillFaces, dt }) {
+export async function promptTest({ title, attributeKey, attributeFaces, skillFaces, dt, impeto = 0 }) {
 	const attributeOptions = Object.entries(OP2.attributes)
 		.map(([key, cfg]) => {
 			const selected = key === attributeKey ? " selected" : "";
@@ -38,6 +40,16 @@ export async function promptTest({ title, attributeKey, attributeFaces, skillFac
 			return `<option value="${faces}">${label}</option>`;
 		})
 		.join("");
+
+	const impetoField = impeto >= OP2.impeto.stepCost
+		? `<div class="form-group op2-test-dialog__impeto">
+			<label>${game.i18n.localize("OP2.Dialog.impeto")}</label>
+			<div class="form-fields">
+				<input type="checkbox" name="spendImpeto" />
+				<span class="hint">${game.i18n.format("OP2.Dialog.impetoHint", { filled: impeto })}</span>
+			</div>
+		</div>`
+		: "";
 
 	const content = `
 	<div class="op2-test-dialog">
@@ -66,6 +78,7 @@ export async function promptTest({ title, attributeKey, attributeFaces, skillFac
 			<label>${game.i18n.localize("OP2.Dialog.dt")}</label>
 			<div class="form-fields"><input type="number" name="dt" value="${dt}" step="1"></div>
 		</div>
+		${impetoField}
 	</div>`;
 
 	const result = await DialogV2.wait({
@@ -93,5 +106,6 @@ export async function promptTest({ title, attributeKey, attributeFaces, skillFac
 		extraDie: Number(result.extraDie) || 0,
 		bonus: Number(result.bonus) || 0,
 		dt: Number.isFinite(Number(result.dt)) ? Number(result.dt) : null,
+		spendImpeto: result.spendImpeto === true,
 	};
 }

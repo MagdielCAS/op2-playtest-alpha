@@ -87,6 +87,42 @@ export const OP2 = {
 		vigilante: "OP2.Profile.vigilante",
 	},
 
+	/** The Ímpeto track of the Executor profile. */
+	impeto: {
+		/** Profile that owns the track. */
+		profile: "executor",
+		/** Boxes on the track. */
+		size: 3,
+		/** Boxes spent for one step on a test. */
+		stepCost: 1,
+		/** Boxes spent for one step on an attribute until the end of the scene. */
+		attributeCost: 3,
+	},
+
+	/**
+	 * `Ajuda`: step increases given to the test of another character, by the die
+	 * of the skill used to help. A d4 cannot help.
+	 */
+	help: { 4: 0, 6: 1, 8: 1, 10: 2, 12: 2, 20: 2 },
+
+	/**
+	 * `Efeitos de falhas críticas`, rolled on 1d8.
+	 * `effect` says what the module applies on its own:
+	 * `attributeStep` reduces one attribute by one step until the end of the
+	 * scene, `resource` subtracts a roll from PV or PD, `narrative` and `none`
+	 * apply nothing.
+	 */
+	criticalFailureTable: [
+		{ face: 1, key: "vexame", effect: "narrative" },
+		{ face: 2, key: "machucado", effect: "attributeStep", attribute: "physical" },
+		{ face: 3, key: "desatencao", effect: "attributeStep", attribute: "mind" },
+		{ face: 4, key: "irritacao", effect: "attributeStep", attribute: "emotion" },
+		{ face: 5, key: "acidente", effect: "resource", resource: "pv", formula: "1d4" },
+		{ face: 6, key: "frustracao", effect: "resource", resource: "pd", formula: "1d4" },
+		{ face: 7, key: "perda", effect: "narrative" },
+		{ face: 8, key: "semEfeito", effect: "none" },
+	],
+
 	/** Number of `Destrancar` attempts per round, by the value of Crime. */
 	unlockAttemptsByCrime: { 4: 1, 6: 2, 8: 3, 10: 4, 12: 5, 20: 6 },
 
