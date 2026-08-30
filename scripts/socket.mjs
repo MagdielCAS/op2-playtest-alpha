@@ -33,7 +33,7 @@ export function isPrimaryGM() {
  *
  * A point of interest is a world Item, which Foundry does not send to players
  * at all. Every read of its data, and every write, therefore happens on a GM
- * client: the player only sends what their own client knows — their actor, and
+ * client: the player only sends what their own client knows, their actor and
  * the result they rolled.
  *
  * @param {string} type     Request type.

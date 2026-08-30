@@ -1,5 +1,5 @@
 /**
- * Ordem Paranormal 2 — Playtest Alpha
+ * Ordem Paranormal 2: Playtest Alpha
  * An overlay module for the `ordemparanormal` system on Foundry VTT v14.
  *
  * The module owns its own Actor sub-type, its own Item sub-type, its own data

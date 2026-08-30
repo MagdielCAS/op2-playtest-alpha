@@ -5,7 +5,7 @@ import { rollTest } from "../dice/test-workflow.mjs";
 
 const fields = foundry.data.fields;
 
-/** A die on the d4–d20 scale, with the step modifiers applied on top of it. */
+/** A die on the d4 to d20 scale, with the step modifiers applied on top of it. */
 function dieField(initial = 4) {
 	return new fields.SchemaField({
 		value: new fields.NumberField({ required: true, integer: true, initial, choices: OP2.dieLadder }),

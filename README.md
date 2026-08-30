@@ -1,6 +1,6 @@
 <div align="center">
 
-# Ordem Paranormal 2 — Playtest Alpha
+# Ordem Paranormal 2: Playtest Alpha (não oficial)
 
 **Camada de regras do playtest alpha de _Ordem Paranormal RPG 2_ para o Foundry VTT.**
 
@@ -10,13 +10,17 @@
 
 </div>
 
-> Projeto não-oficial e independente, sem conteúdo dos livros. _Ordem Paranormal_ é uma criação de
+> **Este é um conteúdo não oficial, publicado sob a
+> [Licença da Comunidade de Ordem Paranormal](https://ordemparanormal.com.br/licenca).**
+>
+> Projeto independente, sem conteúdo dos livros. _Ordem Paranormal_ é uma criação de
 > Rafael "Cellbit" Lange, publicada pela Jambô Editora.
 
 ---
 
 ## Sumário
 
+- [Antes de instalar, leia](#antes-de-instalar-leia)
 - [Sobre](#sobre)
 - [Status](#status)
 - [Compatibilidade](#compatibilidade)
@@ -38,7 +42,24 @@
 - [Configurações](#configurações)
 - [Limites atuais](#limites-atuais)
 - [Desenvolvimento](#desenvolvimento)
-- [Licença](#licença)
+- [Licenças e avisos](#licenças-e-avisos)
+
+---
+
+## Antes de instalar, leia
+
+**Este módulo complementa o sistema base, não o substitui.** Ele não reescreve, não corrige e não
+concorre com o [sistema não-oficial de Ordem Paranormal para Foundry VTT](https://github.com/SouOWendel/ordemparanormal_fvtt),
+que continua sendo obrigatório e é onde o suporte a _Ordem Paranormal RPG_ de fato vive. O que este
+módulo faz é acrescentar, ao lado dele, os tipos e as mecânicas do playtest de segunda edição, sem
+tocar nos dados de OP1.
+
+**As automações daqui acompanham um playtest em andamento.** _Ordem Paranormal RPG 2_ ainda está
+sendo testado publicamente, e as regras deste pacote são explicitamente provisórias. A própria ficha
+do playtest avisa que não é a definitiva. Quando um novo playtest for publicado, ou quando o sistema
+base mudar, **o que está automatizado aqui pode ficar obsoleto de uma hora para outra**, incluindo os
+modelos de dados das fichas e dos pontos de interesse já criados em um mundo. Trate este módulo como
+uma ferramenta de playtest, não como base para uma campanha longa.
 
 ---
 
@@ -55,7 +76,7 @@ OP2 podem coexistir no mesmo mundo, e os dados de OP1 nunca são tocados.
 
 ## Status
 
-Versão atual: `0.1.0`
+Versão atual: `0.1.1`
 
 Cobre o escopo completo do **Playtest Alpha**, focado em cenas de investigação. Enquanto o playtest
 evoluir, modelos de dados, flags e API interna podem mudar sem compatibilidade retroativa.
@@ -79,7 +100,7 @@ Depois ative o módulo em um mundo que use o sistema Ordem Paranormal.
 
 | Recurso | O que faz |
 |---|---|
-| Ficha de agente OP2 | Subtipo de Actor próprio, com 3 atributos e 20 perícias na escala d4–d12, PV, PD, Ímpeto e habilidades. |
+| Ficha de agente OP2 | Subtipo de Actor próprio, com 3 atributos e 20 perícias na escala d4 a d12, PV, PD, Ímpeto e habilidades. |
 | Testes de dois dados | Rola dado de atributo + dado de perícia como uma reserva, soma e compara com a DT. |
 | Rolagem alta e baixa | O card de chat mostra a **RA** e a **RB** de cada teste, usadas por várias mecânicas. |
 | Passo de dados | Aumentos e reduções de passo em atributos e perícias, integrados aos Active Effects. |
@@ -105,11 +126,11 @@ Depois ative o módulo em um mundo que use o sistema Ordem Paranormal.
 
 Crie um Actor do tipo **Agente (OP2 Playtest)**. A ficha tem três abas.
 
-- **Perícias** — os três atributos no topo e as 20 perícias abaixo. Cada linha mostra o dado da
+- **Perícias**: os três atributos no topo e as 20 perícias abaixo. Cada linha mostra o dado da
   perícia e o dado do atributo-base, como na ficha impressa. As seis áreas de **Aptidão** aparecem
   agrupadas, cada uma com o próprio valor.
-- **Habilidades** — lista livre de nome, origem e descrição, para as habilidades de perfil e ocupação.
-- **História** — biografia e anotações.
+- **Habilidades**: lista livre de nome, origem e descrição, para as habilidades de perfil e ocupação.
+- **História**: biografia e anotações.
 
 No cabeçalho ficam perfil, ocupação, nível, PV, PD e, para o Executor, a barra de Ímpeto.
 
@@ -142,8 +163,8 @@ independentemente da DT. Todos os dados em **1** são falha crítica, e o card g
 | 1d8 | Efeito | O módulo faz |
 |---|---|---|
 | 1 | Vexame | Só narra. |
-| 2–4 | Machucado / Desatenção / Irritação | Cria um Active Effect de `-1 passo` no atributo. |
-| 5–6 | Acidente / Frustração | Rola 1d4 e subtrai de PV ou PD. |
+| 2 a 4 | Machucado / Desatenção / Irritação | Cria um Active Effect de `-1 passo` no atributo. |
+| 5 a 6 | Acidente / Frustração | Rola 1d4 e subtrai de PV ou PD. |
 | 7 | Perda | Só narra. |
 | 8 | Sem efeito | Nada. |
 
@@ -160,7 +181,7 @@ A barra de três espaços aparece apenas para o perfil **Executor**.
 
 ### Ajuda
 
-Digite `/op2ajuda`. Escolha a perícia — d4 não ajuda, d6 ou d8 dá um passo, d10 ou d12 dá dois. O
+Digite `/op2ajuda`. Escolha a perícia: d4 não ajuda, d6 ou d8 dá um passo, d10 ou d12 dá dois. O
 card vai para o chat e quem for ajudado clica em **Aceitar ajuda**. O bônus fica guardado e é
 consumido pelo **próximo teste** daquele personagem.
 
@@ -168,15 +189,15 @@ consumido pelo **próximo teste** daquele personagem.
 
 Crie um Item do tipo **Ponto de Interesse (OP2)** para cada elemento da cena.
 
-- **Cabeçalho** — nome, número no mapa e a marca de evidência-chave.
-- **Informações** — uma linha por entrada do quadro do livro: perícia, qualificador
+- **Cabeçalho**: nome, número no mapa e a marca de evidência-chave.
+- **Informações**: uma linha por entrada do quadro do livro: perícia, qualificador
   (`Humanas`, `apenas Victor`, `apenas com a Câmera`), DT e o texto revelado.
   Deixe a **perícia vazia** para continuar a perícia da linha acima, como o livro imprime.
   O cadeado marca uma linha que só o mestre libera, depois da condição.
   O olho marca uma linha já revelada; **Ocultar tudo** zera as revelações para rodar a cena de novo.
-- **Acesso** — as rotas do desafio e o teste disparado pelo ponto (por exemplo, Disciplina DT 10 ao
+- **Acesso**: as rotas do desafio e o teste disparado pelo ponto (por exemplo, Disciplina DT 10 ao
   ver o cadáver, custando 1 PD na falha).
-- **Descrições** — a descrição básica lida em voz alta, a descrição contextual só do mestre e as
+- **Descrições**: a descrição básica lida em voz alta, a descrição contextual só do mestre e as
   leituras de cada ferramenta da Ordo.
 
 ### Jogando a cena de investigação
@@ -237,15 +258,15 @@ contadores de ferimento e trauma, libera as ações de cena e reinicia o contado
 
 Duas ferramentas do Ato II têm mecânica própria e estão automatizadas:
 
-- **`/op2lab <dados>`** — Laboratório Portátil. Rola os dados um a um, começando em d4 e subindo um
+- **`/op2lab <dados>`**: Laboratório Portátil. Rola os dados um a um, começando em d4 e subindo um
   passo a cada rolagem, limitado pelo dado de **Aptidão (Exatas)**. Cada rolagem precisa ser igual ou
   maior que a anterior. O card mostra a sequência, onde ela quebrou e quantas rerrolagens o
   personagem tem (metade de Mente).
-- **`/op2radio`** — Rádio Modificado. Teste de Tecnologia: 6 ou menos não remove nada, 7–9 remove
-  dois conjuntos falsos, 10–12 remove três, 13 ou mais remove todos.
+- **`/op2radio`**: Rádio Modificado. Teste de Tecnologia. Com 6 ou menos não remove nada, de 7 a 9
+  remove dois conjuntos falsos, de 10 a 12 remove três, e com 13 ou mais remove todos.
 
-As demais ferramentas são narrativas — o mestre entrega um handout ou um áudio — e ficam como texto
-livre na aba **Descrições** do ponto de interesse.
+As demais ferramentas são narrativas, com o mestre entregando um handout ou um áudio, e ficam como
+texto livre na aba **Descrições** do ponto de interesse.
 
 ---
 
@@ -281,8 +302,10 @@ Os comandos de jogador usam o token selecionado; sem token, usam o personagem at
 - As habilidades de perfil de **Analista** e **Vigilante** não estão no pacote do playtest, então só
   o Ímpeto do Executor está codificado. A barra é controlada por configuração, então acrescentar
   outro recurso de perfil é uma mudança pequena.
-- As ferramentas narrativas da Ordo não têm automação — por natureza, elas entregam um handout.
+- As ferramentas narrativas da Ordo não têm automação. Por natureza, elas entregam um handout.
 - O módulo ainda não traz compêndios prontos com os pontos de interesse da missão.
+- Os modelos de dados seguem o playtest alpha. Um playtest futuro pode mudar a escala, as perícias ou
+  os recursos, e nesse caso as fichas e os pontos de interesse já criados podem precisar ser refeitos.
 
 ## Desenvolvimento
 
@@ -293,8 +316,8 @@ node .github/scripts/validate-manifest.mjs .   # todo caminho declarado no manif
 node .github/scripts/test-rules.mjs            # a aritmética das regras, testada contra o livro
 ```
 
-Os dois rodam no CI a cada push e de novo **sobre o zip já montado** antes de publicar uma release —
-foi assim que a falta de um diretório no pacote deixou de passar despercebida.
+Os dois rodam no CI a cada push e de novo **sobre o zip já montado** antes de publicar uma release.
+Foi assim que a falta de um diretório no pacote deixou de passar despercebida.
 
 A aritmética das regras vive em funções puras, sem importar nada do Foundry, o que permite testá-la
 em Node. Vários casos de teste são os exemplos do próprio livro.
@@ -314,9 +337,37 @@ scripts/tools/             ferramentas da Ordo
 
 A API pública fica em `game.modules.get("op2-playtest-alpha").api`.
 
-## Licença
+> **Antes de contribuir:** PDFs oficiais, extrações desses PDFs, arte, handouts e compêndios com o
+> conteúdo das missões **não entram no repositório**. Use esse material localmente, fora do controle
+> de versão. Veja [`NOTICE.md`](NOTICE.md).
 
-MIT. Veja [`LICENSE`](LICENSE).
+## Licenças e avisos
 
-_Ordem Paranormal_ é uma criação de Rafael "Cellbit" Lange, publicada pela Jambô Editora. Este é um
-módulo de fã, não-oficial, e não distribui nenhum conteúdo dos livros.
+**Este é um conteúdo não oficial, publicado sob a
+[Licença da Comunidade de Ordem Paranormal](https://ordemparanormal.com.br/licenca).**
+
+| O quê | Licença |
+|---|---|
+| O código deste módulo | [MIT](LICENSE), obra original, © 2026 Magdiel Campelo |
+| As mecânicas de _Ordem Paranormal 2_ | Homebrew sob a Licença da Comunidade |
+| A marca _Ordem Paranormal_ | Rafael "Cellbit" Lange e Jambô Editora, nenhum direito reivindicado aqui |
+
+A licença MIT cobre **apenas o software**. Ela não concede nenhum direito sobre a propriedade
+intelectual de _Ordem Paranormal_.
+
+O módulo implementa **mecânicas**. Ele não reproduz textos dos livros e não distribui arte, logos,
+selos, mapas, handouts, missões nem pontos de interesse prontos. Não há nenhum arquivo de mídia no
+pacote: os dois ícones usados já acompanham o Foundry VTT. Os arquivos de idioma trazem apenas
+rótulos de interface e descrições funcionais escritas para este módulo.
+
+Este projeto **não tem aprovação, patrocínio nem vínculo oficial** com os detentores da marca. O nome
+aparece apenas para identificar com qual sistema o módulo funciona.
+
+O sistema base, [Ordem Paranormal para Foundry VTT](https://github.com/SouOWendel/ordemparanormal_fvtt),
+é distribuído sob CC BY-NC-SA 4.0. Este módulo não copia nem deriva do código dele. Ele usa as APIs
+públicas do Foundry e registra os próprios subtipos, modelos de dados, fichas e classe de rolagem,
+portanto a cláusula ShareAlike daquela licença não alcança este código.
+
+Detalhes e as regras de contribuição em [`NOTICE.md`](NOTICE.md). Este módulo não contém textos,
+artes, compêndios ou assets oficiais de Ordem Paranormal. Ele apenas oferece automações para mesas
+que utilizam o sistema não-oficial no Foundry VTT.

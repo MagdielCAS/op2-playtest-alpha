@@ -141,7 +141,7 @@ export class OP2PointOfInterestData extends foundry.abstract.TypeDataModel {
 
 	/**
 	 * Lines of one skill that a value or a test result would reveal.
-	 * A locked line never reveals on its own — the GM opens it by hand.
+	 * A locked line never reveals on its own. The GM opens it by hand.
 	 * @param {string} skillKey  Skill chosen by the character.
 	 * @param {number} value     Skill die for `Investigar`, or the test total for `Examinar`.
 	 * @returns {object[]}       Lines not yet revealed whose DT the value reaches.

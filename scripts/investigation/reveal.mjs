@@ -19,7 +19,7 @@ export function resolveSkills(infos) {
 
 /**
  * Lines a value or a test result reveals. A locked line never reveals on its
- * own, and a line already revealed is never returned again — that is what makes
+ * own, and a line already revealed is never returned again. That is what makes
  * an `Examinar` cost 1 PD when it finds nothing new.
  * @param {object[]} infos   Lines with a resolved skill.
  * @param {string} skillKey  Skill chosen by the character.
