@@ -38,14 +38,16 @@ async function askArmed(title) {
 /**
  * Start an attack: roll `Luta` and post the card the defender answers.
  * @param {Actor} actor  Attacking character.
+ * @param {object} [options]
+ * @param {boolean} [options.configure=true]  False rolls without the dialog.
  * @returns {Promise<ChatMessage|null>}
  */
-export async function attack(actor) {
+export async function attack(actor, { configure = true } = {}) {
 	const armed = await askArmed(game.i18n.localize("OP2.Combat.attackTitle"));
 	if (armed === null) return null;
 
 	// An opposed test has no DT: the two totals are compared instead.
-	const roll = await actor.system.rollTest({ skillKey: OP2.combat.attackSkill, dt: null, configure: true });
+	const roll = await actor.system.rollTest({ skillKey: OP2.combat.attackSkill, dt: null, configure });
 	if (!roll) return null;
 
 	const { total } = roll;

@@ -64,20 +64,26 @@ function registerDefaults(defaults) {
 function buildExtenders(coreModule) {
 	const ActionExtender = class OP2ActionHandlerExtender extends coreModule.api.ActionHandlerExtender {
 		/**
-		 * Add the OP2 groups for an OP2 agent, and the GM group for a GM.
+		 * Add the OP2 groups, but only for an OP2 agent.
+		 *
+		 * Token Action HUD hides a top-level group that has no actions, and that
+		 * is what keeps the OP2 tab out of the way of the OP1 layout. The GM
+		 * actions are gated the same way on purpose: leaving them ungated kept
+		 * the tab populated on every actor, so it rendered over the OP1 panel and
+		 * swallowed its clicks. A GM with no OP2 agent selected uses /op2rodada
+		 * and /op2cena instead.
+		 *
 		 * @override
 		 */
 		async extendActionHandler() {
 			const actor = this.actionHandler?.actor;
-			const isAgent = actor?.type === AGENT_TYPE;
+			if (actor?.type !== AGENT_TYPE) return;
 
-			if (isAgent) {
-				await this.#addSkills(actor);
-				await this.#addScene();
-				await this.#addSurvival();
-				await this.#addTools();
-				this.#addResourceInfo(actor);
-			}
+			await this.#addSkills(actor);
+			await this.#addScene();
+			await this.#addSurvival();
+			await this.#addTools();
+			this.#addResourceInfo(actor);
 
 			if (game.user.isGM) await this.#addGmActions();
 		}

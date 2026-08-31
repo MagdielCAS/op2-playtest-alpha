@@ -52,9 +52,11 @@ export async function endScene(scene = game.scenes?.current) {
  * are spent for the rest of the scene once they succeed.
  * @param {Actor} actor  Character acting.
  * @param {string} kind  `recap` or `share`.
+ * @param {object} [options]
+ * @param {boolean} [options.configure=true]  False rolls without the dialog.
  * @returns {Promise<ChatMessage|null>}  Null when the player cancels the roll.
  */
-export async function sceneAction(actor, kind) {
+export async function sceneAction(actor, kind, { configure = true } = {}) {
 	const config = OP2.sceneActions[kind];
 	if (!config) return null;
 
@@ -64,7 +66,7 @@ export async function sceneAction(actor, kind) {
 		return null;
 	}
 
-	const roll = await actor.system.rollTest({ skillKey: config.skill, dt: config.dt, configure: true });
+	const roll = await actor.system.rollTest({ skillKey: config.skill, dt: config.dt, configure });
 	if (!roll) return null;
 
 	const passed = roll.evaluation.success;

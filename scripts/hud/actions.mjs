@@ -30,18 +30,18 @@ export async function runHudAction(actor, type, id, event) {
 			return true;
 
 		case ACTION.scene:
-			if (id === "recap" || id === "share") await sceneAction(actor, id);
+			if (id === "recap" || id === "share") await sceneAction(actor, id, { configure: !fast });
 			else if (id === "help") await offerHelp(actor);
-			else if (id === "attack") await attack(actor);
+			else if (id === "attack") await attack(actor, { configure: !fast });
 			else return false;
 			return true;
 
 		case ACTION.survival:
-			await rollSurvival(actor, id);
+			await rollSurvival(actor, id, { configure: !fast });
 			return true;
 
 		case ACTION.tool:
-			if (id === "radio") await runRadio(actor);
+			if (id === "radio") await runRadio(actor, { configure: !fast });
 			else if (id.startsWith("lab")) await runLab(actor, Number(id.replace("lab", "")) || OP2.tools.lab.minDice);
 			else return false;
 			return true;

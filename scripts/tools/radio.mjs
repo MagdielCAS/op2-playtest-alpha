@@ -23,10 +23,10 @@ export function falseSetsRemoved(total, table = OP2.tools.radio.table) {
  * @param {Actor} actor  Character listening.
  * @returns {Promise<ChatMessage|null>}  Null when the player cancels the roll.
  */
-export async function runRadio(actor) {
+export async function runRadio(actor, { configure = true } = {}) {
 	const config = OP2.tools.radio;
 	// The radio has no DT: the result is read on its own band table.
-	const roll = await actor.system.rollTest({ skillKey: config.skill, dt: null, configure: true });
+	const roll = await actor.system.rollTest({ skillKey: config.skill, dt: null, configure });
 	if (!roll) return null;
 
 	const removed = falseSetsRemoved(roll.total);

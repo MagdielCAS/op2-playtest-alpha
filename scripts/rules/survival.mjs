@@ -91,16 +91,18 @@ export async function postSurvivalPrompt(actor, rule) {
  * says so and leaves the scene to the table.
  * @param {Actor} actor  Character testing.
  * @param {string} kind  `injury` or `trauma`.
+ * @param {object} [options]
+ * @param {boolean} [options.configure=true]  False rolls without the dialog.
  * @returns {Promise<ChatMessage|null>}  Null when the player cancels the roll.
  */
-export async function rollSurvival(actor, kind) {
+export async function rollSurvival(actor, kind, { configure = true } = {}) {
 	const rule = OP2.survival[kind];
 	if (!rule) return null;
 
 	const testsMade = actor.system.survival[`${kind}Tests`];
 	const dt = survivalDT(testsMade, rule);
 
-	const roll = await actor.system.rollTest({ skillKey: rule.skill, dt, configure: true });
+	const roll = await actor.system.rollTest({ skillKey: rule.skill, dt, configure });
 	if (!roll) return null;
 
 	await actor.update({ [`system.survival.${kind}Tests`]: testsMade + 1 });
