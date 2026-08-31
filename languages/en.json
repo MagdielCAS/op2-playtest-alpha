@@ -273,5 +273,14 @@
 	"OP2.Tool.radioNone": "No false set is removed.",
 	"OP2.Tool.radioRemoved": "False sets removed:",
 	"OP2.Command.gmOnly": "Only the GM may use this command.",
-	"OP2.Command.unknown": "Unknown command: /op2{name}"
+	"OP2.Command.unknown": "Unknown command: /op2{name}",
+	"OP2.Hud.tab": "OP2",
+	"OP2.Hud.group.skills": "Skills",
+	"OP2.Hud.group.scene": "Scene actions",
+	"OP2.Hud.group.survival": "Survival",
+	"OP2.Hud.group.tools": "Tools",
+	"OP2.Hud.group.gm": "GM",
+	"OP2.Hud.action.endRound": "End the round (overload)",
+	"OP2.Hud.action.endScene": "End the scene",
+	"OP2.Hud.actionFailed": "The HUD action failed. See the console for details."
 }

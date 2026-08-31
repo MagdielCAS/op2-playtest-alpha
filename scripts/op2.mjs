@@ -34,6 +34,7 @@ import { runLab } from "./tools/lab.mjs";
 import { runRadio } from "./tools/radio.mjs";
 
 import { registerCardActions, hideSpentButtons } from "./card-actions.mjs";
+import { registerTokenActionHud } from "./hud/index.mjs";
 import { registerChatCommands, COMMANDS } from "./chat-commands.mjs";
 import { registerHandler, registerSocket } from "./socket.mjs";
 
@@ -92,6 +93,7 @@ Hooks.once("init", () => {
 	registerInvestigationHandlers();
 	registerHandler("combatResolve", handleCombatResolve);
 	registerChatCommands();
+	registerTokenActionHud();
 
 	foundry.applications.handlebars.loadTemplates(
 		TEMPLATES.map((name) => `modules/${MODULE_ID}/templates/${name}.hbs`)

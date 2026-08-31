@@ -273,5 +273,14 @@
 	"OP2.Tool.radioNone": "Nenhum conjunto falso é removido.",
 	"OP2.Tool.radioRemoved": "Conjuntos falsos removidos:",
 	"OP2.Command.gmOnly": "Apenas o mestre pode usar este comando.",
-	"OP2.Command.unknown": "Comando desconhecido: /op2{name}"
+	"OP2.Command.unknown": "Comando desconhecido: /op2{name}",
+	"OP2.Hud.tab": "OP2",
+	"OP2.Hud.group.skills": "Perícias",
+	"OP2.Hud.group.scene": "Ações de cena",
+	"OP2.Hud.group.survival": "Sobrevivência",
+	"OP2.Hud.group.tools": "Ferramentas",
+	"OP2.Hud.group.gm": "Mestre",
+	"OP2.Hud.action.endRound": "Fim de rodada (sobrecarga)",
+	"OP2.Hud.action.endScene": "Fim de cena",
+	"OP2.Hud.actionFailed": "A ação do HUD falhou. Veja o console para detalhes."
 }

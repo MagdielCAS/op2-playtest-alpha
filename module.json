@@ -2,7 +2,7 @@
 	"id": "op2-playtest-alpha",
 	"title": "Ordem Paranormal 2: Playtest Alpha (não oficial)",
 	"description": "Camada de regras do playtest alpha de Ordem Paranormal RPG 2 sobre o sistema Ordem Paranormal: atributos e perícias em escala de dados (d4 a d12), testes de dois dados, rolagem alta e baixa, cenas de investigação e desafios de acesso. Complementa o sistema base, não o substitui. As automações acompanham um playtest em andamento e podem ficar obsoletas assim que um novo playtest ou uma nova versão do sistema for publicado. Este é um conteúdo não oficial, publicado sob a Licença da Comunidade de Ordem Paranormal.",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"compatibility": {
 		"minimum": "14",
 		"verified": "14"
@@ -20,6 +20,16 @@
 				"compatibility": {
 					"minimum": "8.0.0"
 				}
+			}
+		],
+		"optional": [
+			{
+				"id": "token-action-hud-core",
+				"type": "module",
+				"compatibility": {
+					"minimum": "2.1.0"
+				},
+				"reason": "Adiciona os grupos de perícias, ações de cena e ações de mestre ao Token Action HUD."
 			}
 		]
 	},
